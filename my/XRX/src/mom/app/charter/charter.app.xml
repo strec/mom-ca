@@ -43,6 +43,11 @@ along with VdU/VRET.  If not, see http://www.gnu.org/licenses.
       <xrx:relativepath>js/</xrx:relativepath>
       <xrx:name>charter.js</xrx:name>
     </xrx:resource>
+    <xrx:resource>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/js/charter-geo-map</xrx:atomid>
+      <xrx:relativepath>js/</xrx:relativepath>
+      <xrx:name>charter-geo-map.js</xrx:name>
+    </xrx:resource>
     <!-- XSL -->
     <xrx:resource>
       <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/xsl/cei2html</xrx:atomid>
@@ -107,5 +112,24 @@ along with VdU/VRET.  If not, see http://www.gnu.org/licenses.
       <xrx:mode>embeddedwidget</xrx:mode>
       <xrx:atomid>tag:www.monasterium.net,2011:/mom/widget/charter-subeditor</xrx:atomid>
     </xrx:map>
+    <xrx:map>
+      <xrx:uripattern>/charter-geo-map$</xrx:uripattern>
+      <xrx:mode>mainwidget</xrx:mode>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/widget/charter-geo-map</xrx:atomid>
+    </xrx:map>
+    <!-- services -->
+    <xrx:map>
+      <xrx:uripattern>/charter-save-location$</xrx:uripattern>
+      <xrx:mode>service</xrx:mode>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/service/charter-save-location</xrx:atomid>
+    </xrx:map>
+    <xrx:map>
+      <xrx:uripattern>/charter-check-for-location$</xrx:uripattern>
+      <xrx:mode>service</xrx:mode>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/service/charter-check-for-location</xrx:atomid>
+    </xrx:map>
   </xrx:resolver>
+  <xrx:conf>
+    <xrx:param name="geocoding-db-base-uri">/db/mom-data/geocoding/</xrx:param>
+  </xrx:conf>
 </xrx:app>

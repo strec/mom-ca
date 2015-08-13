@@ -672,9 +672,24 @@ cei-recipient {{
 }}
 
       </style>
+
+      <!-- the css for the geo-map functionality, although I ideally shouldn't have to do this by hand. -->
+      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+      <!-- /the css for the geo-map functionality -->
+
   </xrx:csss>
   <xrx:jss>
     <xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/charter</xrx:resource>
+
+    <!-- the js for the geo-map functionality, although I ideally shouldn't have to do this by hand. -->
+    <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/jquery</xrx:resource>
+    <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/core</xrx:resource>
+    <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/widget</xrx:resource>
+    <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/position</xrx:resource>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/charter-geo-map</xrx:resource>
+    <!-- /the js for the geo-map functionality -->
+
   </xrx:jss>
   <xrx:model>
     { bookmark:model(conf:param('request-root')) }
@@ -1099,6 +1114,19 @@ cei-recipient {{
     </xrx:div>
   </xrx:divs>
   <xrx:view>
+
+      <!-- subwidget for openstreetmap -->
+      <xrx:subwidget>
+        <xrx:atomid>tag:www.monasterium.net,2011:/mom/widget/charter-geo-map</xrx:atomid>
+        <xrx:pass>
+          <xrx:parameter>
+            <xrx:name>$constructor:placeNames</xrx:name>
+            <xrx:expression>$wcharter:cei-text-element-of-current-charter//cei:placeName</xrx:expression>
+          </xrx:parameter>
+        </xrx:pass>
+      </xrx:subwidget>
+      <!-- /subwidget for openstreetmap -->
+
     <div data-demoid="0e76cb8a-4a4d-41ac-8736-8fb35a8375e2">
       <div class="p" data-demoid="58e0a6fc-2d16-48dd-8b29-be19a037b8c7">
         <!-- 
@@ -1207,6 +1235,7 @@ cei-recipient {{
         i18n:translate-xml(transform:transform($page, $wcharter:xsl, $wcharter:params)) 
         }
         <xrx:div>how-to-cite</xrx:div>
+        <div id="the-map-goes-here"></div>
       </div>
       {
       if($xrx:tokenized-uri[last()] = 'charter') then

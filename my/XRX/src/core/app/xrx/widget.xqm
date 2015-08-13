@@ -163,8 +163,12 @@ declare function widget:compile-widget($app-name as xs:string,
                         if($jqueryflag) then 
                             <link rel="stylesheet" href="/{ $project-name }/jquery/themes/base/jquery.ui.all.css"/>
                         else () 
-                    } 
+                    }
                     <link rel="stylesheet" type="text/css" href="/{ $project-name }/css/?atomid={ $widgetid }"/>
+                    { (: So external link-tags for css can be used. :)
+                      for $external-css-link in $widget/xrx:csss/xhtml:link
+                      return $external-css-link
+                    }
                     { 
                         if(not($javascript-debug)) then
                             if($widget/xrx:jss/xrx:resource or $jqueryflag) then 
@@ -214,6 +218,10 @@ declare function widget:compile-widget($app-name as xs:string,
                         else () 
                     }          
                     <link rel="stylesheet" type="text/css" href="/{ $project-name }/css/?atomid={ $widgetid }"/>
+                    { (: So external link-tags for css can be used. :)
+                      for $external-css-link in $widget/xrx:csss/xhtml:link
+                      return $external-css-link
+                    }
                     { 
                         if(not($javascript-debug)) then
                             if($widget/xrx:jss/xrx:resource or $jqueryflag) then 
