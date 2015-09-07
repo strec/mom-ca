@@ -118,12 +118,12 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
       <xrx:expression>validation:clear-grammar-cache()</xrx:expression>
     </xrx:variable>
     <xrx:variable>
-      <xrx:name>$schema</xrx:name>
+      <xrx:name>$cei-schema</xrx:name>
       <xrx:expression>$xrx:db-base-collection/xs:schema[@id='cei']</xrx:expression>
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$validation-report</xrx:name>
-      <xrx:expression>data:validate($data-transformed, $schema)</xrx:expression>
+      <xrx:expression>data:validate($data-transformed, $cei-schema)</xrx:expression>
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$is-valid</xrx:name>
@@ -137,8 +137,9 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
   </xrx:init>
   <xrx:body>
     {
-    let $optimized-validation-report := 
+    let $optimized-validation-report :=
       <report xmlns="">
+        <info>Internal CEI validation report: </info>
         { $validation-report//*:status }
         { $validation-report//*:namespace }
         { $validation-report//*:duration }

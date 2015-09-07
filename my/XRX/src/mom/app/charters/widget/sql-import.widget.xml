@@ -78,9 +78,9 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       <!-- 
         submissions
        -->
-                  
+
       <xf:submission action="{ $xrx:jetty-request-base-url }service/sql-validate" id="svalidate" instance="ivalidation-response" method="post" replace="instance">
-      </xf:submission>
+      </xf:submission> <!-- Not "validating" any xml. Only checking, if the supplied SQL-Database-Information is correct and a connection to the database can be established. -->
       
       <xf:submission action="{ $xrx:jetty-request-base-url }service/sql-transform" id="stransform" instance="itransform-response" method="post" replace="instance">
       </xf:submission>
@@ -101,6 +101,7 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       <xf:bind id="buploadtype" nodeset="uploadtype"/>
       <xf:bind id="bupload-ready" nodeset="//value/@ready" relevant=". = 'yes'"/>
       
+      <xf:bind id="btinfo" nodeset="instance('itransform-response')//info"/>
       <xf:bind id="btstatus" nodeset="instance('itransform-response')//status"/>
       <xf:bind id="btnamespace" nodeset="instance('itransform-response')//namespace"/>
       <xf:bind id="btmessage" nodeset="instance('itransform-response')//message"/>
@@ -551,6 +552,18 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
                 </div>
                 <div class="report" data-demoid="7c8fb4c0-8e83-46b6-abfe-282d7c41592e">
                   <table class="reporttable">
+                    <tr>
+                      <td>
+                        <xrx:i18n>
+                          <xrx:key>info</xrx:key>
+                          <xrx:default>Info</xrx:default>
+                        </xrx:i18n>
+                        <span>: </span>
+                      </td>
+                      <td>
+                        <xf:output bind="btinfo"/>
+                      </td>
+                    </tr>
                     <tr>
                       <td>
                         <xrx:i18n>

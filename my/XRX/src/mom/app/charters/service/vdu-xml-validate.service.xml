@@ -59,8 +59,9 @@ along with VdU/VRET.  If not, see http://www.gnu.org/licenses.
     </xrx:init>
     <xrx:body>
     {
-    let $optimized-validation-report := 
+    let $optimized-validation-report :=
       <report>
+        <info>Internal CEI validation report: </info>
         { $validation-report//*:status }
         { $validation-report//*:namespace }
         { $validation-report//*:duration }

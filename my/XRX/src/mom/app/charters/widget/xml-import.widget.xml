@@ -63,6 +63,14 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       
       <xf:instance id="itransform-response">
         <xrx:response status=""/>
+        <xrx:report>
+          <report xmlns="">
+            <info/>
+            <status/>
+            <namespace/>
+            <duration/>
+          </report>
+        </xrx:report>
       </xf:instance>
       
       <xf:instance id="iimport-response">
@@ -97,7 +105,8 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       <xf:bind id="bvstatus" nodeset="instance('ivalidation-response')//status"/>
       <xf:bind id="bvnamespace" nodeset="instance('ivalidation-response')//namespace"/>
       <xf:bind id="bvmessage" nodeset="instance('ivalidation-response')//message"/>
-      
+
+      <xf:bind id="btinfo" nodeset="instance('itransform-response')//info"/>
       <xf:bind id="btstatus" nodeset="instance('itransform-response')//status"/>
       <xf:bind id="btnamespace" nodeset="instance('itransform-response')//namespace"/>
       <xf:bind id="btmessage" nodeset="instance('itransform-response')//message"/>
@@ -526,6 +535,18 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
                 </div>
                 <div class="report" data-demoid="a5f16065-4aa0-4a0d-97ea-b6168b7202ed">
                   <table class="reporttable">
+                    <tr>
+                      <td>
+                        <xrx:i18n>
+                          <xrx:key>info</xrx:key>
+                          <xrx:default>Info</xrx:default>
+                        </xrx:i18n>
+                        <span>: </span>
+                      </td>
+                      <td>
+                        <xf:output bind="btinfo"/>
+                      </td>
+                    </tr>
                     <tr>
                       <td>
                         <xrx:i18n>

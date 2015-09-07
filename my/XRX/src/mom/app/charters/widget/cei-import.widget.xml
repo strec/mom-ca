@@ -59,6 +59,7 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
           <xrx:icon/>
           <xrx:report>
             <report xmlns="">
+              <info/>
               <status/>
               <namespace/>
               <duration/>
@@ -93,6 +94,7 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       
       <xf:bind nodeset="fileuri" type="xs:anyURI"/>
       
+      <xf:bind id="bvinfo" nodeset="instance('ivalidation-response')//info"/>
       <xf:bind id="bvstatus" nodeset="instance('ivalidation-response')//status"/>
       <xf:bind id="bvnamespace" nodeset="instance('ivalidation-response')//namespace"/>
       <xf:bind id="bvmessage" nodeset="instance('ivalidation-response')//message"/>
@@ -332,6 +334,18 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
                 </div>  
                 <div class="report" data-demoid="73ab6a9e-7e94-49f5-9f8b-b300f5ea033b">
                   <table id="reporttable">
+                    <tr>
+                      <td>
+                        <xrx:i18n>
+                          <xrx:key>info</xrx:key>
+                          <xrx:default>Info</xrx:default>
+                        </xrx:i18n>
+                        <span>: </span>
+                      </td>
+                      <td>
+                        <xf:output bind="bvinfo"/>
+                      </td>
+                    </tr>
                     <tr>
                       <td>
                         <xrx:i18n>

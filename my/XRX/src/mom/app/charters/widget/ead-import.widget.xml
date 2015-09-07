@@ -94,6 +94,7 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       
       <xf:bind nodeset="fileuri" type="xs:anyURI"/>
       
+      <xf:bind id="bvinfo" nodeset="instance('ivalidation-response')//info"/>
       <xf:bind id="bvstatus" nodeset="instance('ivalidation-response')//status"/>
       <xf:bind id="bvnamespace" nodeset="instance('ivalidation-response')//namespace"/>
       <xf:bind id="bvmessage" nodeset="instance('ivalidation-response')//message"/>
@@ -377,6 +378,18 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
                 </div>  
                 <div class="report" data-demoid="e14d1c4b-63da-48e2-8a8b-8a05aaa80c0a">
                   <table class="reporttable">
+                    <tr>
+                      <td>
+                        <xrx:i18n>
+                          <xrx:key>info</xrx:key>
+                          <xrx:default>Info</xrx:default>
+                        </xrx:i18n>
+                        <span>: </span>
+                      </td>
+                      <td>
+                        <xf:output bind="bvinfo"/>
+                      </td>
+                    </tr>
                     <tr>
                       <td>
                         <xrx:i18n>
