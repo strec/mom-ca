@@ -131,8 +131,34 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
       
     </xf:model>
   </xrx:model>
+  <xrx:divs>
+    <xrx:div>
+      <xrx:key>back-link-div</xrx:key>
+      <xrx:view>
+        {
+        if($wcharter-import:context = 'fond') then
+        <a href="{ $wcharter-import:context }">
+          <span>&lt;&lt;</span>
+          <xrx:i18n>
+            <xrx:key>back-to-fond</xrx:key>
+            <xrx:default>Back to fond</xrx:default>
+          </xrx:i18n>
+        </a>
+        else
+        <a href="{ $wcharter-import:context }">
+          <span>&lt;&lt;</span>
+          <xrx:i18n>
+            <xrx:key>back-to-collection</xrx:key>
+            <xrx:default>Back to collection</xrx:default>
+          </xrx:i18n>
+        </a>
+        }
+      </xrx:view>
+    </xrx:div>
+  </xrx:divs>
   <xrx:view>
     <div data-demoid="65cc0b98-5dd0-4bae-9ac5-7615d8f7963e" id="dcharter-import">
+      <xrx:div>back-link-div</xrx:div>
       {
       if($wcharter-import:context = 'fond') then
       <div class="h2" data-demoid="eb877480-7984-4c37-b6f1-535745952009">
@@ -194,6 +220,13 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
           <xrx:i18n>
             <xrx:key>import-charters</xrx:key>
             <xrx:default>Import charters</xrx:default>
+          </xrx:i18n>
+        </a>
+        <span> &gt; </span>
+        <a href="{ conf:param('request-root') }{ $charter:rcollectionid }/cei-import">
+          <xrx:i18n>
+            <xrx:key>cei-import</xrx:key>
+            <xrx:default>CEI import</xrx:default>
           </xrx:i18n>
         </a>
       </div>
