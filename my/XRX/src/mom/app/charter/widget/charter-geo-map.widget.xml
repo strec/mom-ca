@@ -46,8 +46,20 @@ it leaves the active development stage.
   </xrx:constructor>
   <xrx:variables>
     <xrx:variable>
-      <xrx:name>$first-occurence-of-placeName</xrx:name>
-      <xrx:expression>$constructor:placeNames[1]/text()</xrx:expression>
+      <xrx:name>$first-occurrence-of-placeName</xrx:name>
+      <xrx:expression>$constructor:placeNames[1]</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$text-of-first-occurrence-of-placeName</xrx:name>
+      <xrx:expression>$first-occurrence-of-placeName/text()</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$string-of-reg-attribute-of-first-occurrence-of-placeName</xrx:name>
+      <xrx:expression>string($first-occurrence-of-placeName/@reg)</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$string-of-reg-attribute-without-special-chars</xrx:name>
+      <xrx:expression>replace($string-of-reg-attribute-of-first-occurrence-of-placeName, '[^A-ZÄÖÜa-zäöüß0-9\-\.\s]+', '')</xrx:expression>
     </xrx:variable>
   </xrx:variables>
   <xrx:portal>tag:www.monasterium.net,2011:/mom/portal/empty</xrx:portal>
@@ -78,7 +90,8 @@ it leaves the active development stage.
   <xrx:view>
     <div data-demoid="47696190-01dc-4fc0-8358-a583848ad9c0" id="geo-map">
    <!--  <xrx:div>charter-Hello-World-div</xrx:div> -->
-      <div id="PlaceName" style="display: none;">{ $first-occurence-of-placeName }</div> <!-- once this widget is implemented as a subwidget, here I will insert the corresponding parameter that was provided by the charter mainwidget. -->
+      <div id="PlaceName" style="display: none;">{ $text-of-first-occurrence-of-placeName }</div>
+      <div id="PlaceName-reg" style="display: none">{ $string-of-reg-attribute-without-special-chars }</div>
       <div id="checkForLocationService" style="display: none;">{ conf:param('request-root')}service/charter-check-for-location</div>
       <div id="saveLocationService" style="display: none;">{ conf:param('request-root')}service/charter-save-location</div>
       <div id="map"></div>
