@@ -88,6 +88,7 @@ function saveLocationThroughMarker(){
       url: $("#saveLocationService").text(),
       type: "POST",
       data: "placename=" + $("#PlaceName").text()
+            + "&placename-reg" + $("#PlaceName-reg").text()
             + "&lat=" + myLeaflet["currentMarkerLatLng"]["lat"]
             + "&lng=" + myLeaflet["currentMarkerLatLng"]["lng"],
       statusCode: {
@@ -104,6 +105,7 @@ function saveLocation(myOwnPlaceName, aPlaceProvidingLatLng){
 		  url: $("#saveLocationService").text(),
 		  type: "POST",
 		  data: "placename=" + myOwnPlaceName // the decision has been made to save the location to the database with our own (place)name, and use (the geonames) api just as a means to get the lat/lng.
+		        + "&placename-reg" + $("#PlaceName-reg").text()
 		        + "&lat=" + aPlaceProvidingLatLng["lat"]
 	            + "&lng=" + aPlaceProvidingLatLng["lng"],
 		  statusCode: {

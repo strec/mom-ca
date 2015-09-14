@@ -91,7 +91,8 @@ it leaves the active development stage.
     <div data-demoid="47696190-01dc-4fc0-8358-a583848ad9c0" id="geo-map">
    <!--  <xrx:div>charter-Hello-World-div</xrx:div> -->
       <div id="PlaceName" style="display: none;">{ $text-of-first-occurrence-of-placeName }</div>
-      <div id="PlaceName-reg" style="display: none">{ $string-of-reg-attribute-without-special-chars }</div>
+      <div id="PlaceName-reg" style="display: none">{ $string-of-reg-attribute-of-first-occurrence-of-placeName }</div>
+      <div id="PlaceName-reg-without-special-chars" style="display: none">{ $string-of-reg-attribute-without-special-chars }</div>
       <div id="checkForLocationService" style="display: none;">{ conf:param('request-root')}service/charter-check-for-location</div>
       <div id="saveLocationService" style="display: none;">{ conf:param('request-root')}service/charter-save-location</div>
       <div id="map"></div>
