@@ -91,7 +91,7 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
         if($placeName-location) then
           system:as-user('admin', conf:param('dba-password'), update replace $placeName-location with $location)
         else
-          system:as-user('admin', conf:param('dba-password'),update insert $location into $locations)
+          system:as-user('admin', conf:param('dba-password'), update insert $location into $locations)
       else()
     return ()
 
