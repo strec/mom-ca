@@ -39,6 +39,10 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     <!-- precondition is of course that there is a conf-param 'geocoding-db-base-uri' that makes sense.
      File with entries needs to have at least empty <locations></locations> inside. -->
     <xrx:variable>
+      <xrx:name>$user-id</xrx:name>
+      <xrx:expression>$xrx:user-id</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
       <xrx:name>$placeName</xrx:name>
       <xrx:expression>request:get-parameter('placename', ())</xrx:expression>
     </xrx:variable>
@@ -80,13 +84,15 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
         <name>{ $placeName }</name>
         <lat>{ $lat }</lat>
         <lng>{ $lng }</lng>
+        <who>{ $user-id }</who>
       </location>
     let $store-in-database := (: if there is a location with the name in database already, then replace it. else insert it. :)
-      if($placeName-location) then
-        update replace $placeName-location with $location
-      else
-        update insert $location into $locations
-
+      if(xmldb:is-authenticated()) then
+        if($placeName-location) then
+          system:as-user('admin', conf:param('dba-password'), update replace $placeName-location with $location)
+        else
+          system:as-user('admin', conf:param('dba-password'),update insert $location into $locations)
+      else()
     return ()
 
     }
