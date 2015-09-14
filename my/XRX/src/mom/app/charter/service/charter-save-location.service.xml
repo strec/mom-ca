@@ -70,9 +70,9 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
       <xrx:name>$locations</xrx:name>
       <xrx:expression>$geocoding-collection//locations</xrx:expression>
     </xrx:variable>
-    <xrx:variable> <!-- possible entry, which contains the placeName as its' name already. -->
+    <xrx:variable> <!-- possible entry, which contains the placeName (or the placeName_reg) as its' name (name_reg) already.. -->
       <xrx:name>$placeName-location</xrx:name>
-      <xrx:expression>$locations/location[name = $placeName][1]</xrx:expression>
+      <xrx:expression>$locations/location[name = $placeName or name_reg = $placeName-reg][1]</xrx:expression>
     </xrx:variable>
   </xrx:variables>
   <xrx:init>
@@ -86,7 +86,7 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     let $location :=
       <location>
         <name>{ $placeName }</name>
-        <reg>{ $placeName-reg }</reg>
+        <name_reg>{ $placeName-reg }</name_reg>
         <lat>{ $lat }</lat>
         <lng>{ $lng }</lng>
         <who>{ $user-id }</who>

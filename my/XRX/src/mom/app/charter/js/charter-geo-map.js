@@ -4,16 +4,19 @@ $(document).ready(function(){
 	$("#geo-map").appendTo("#the-map-goes-here");
 
     var myPlace = $("#PlaceName").text(); //parameter provided inside hidden div
+    var myPlace_reg = $("#PlaceName-reg").text(); //this is the original value of the cei:placeName/@reg
+
 	//the geo-map is only needed if there is a place to show.
 	if(myPlace.length > 0){
 	  myLeaflet.map = L.map('map');
 	  L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg').addTo(myLeaflet["map"]);
 	
-	  getGeoPlaceFor(myPlace,
+	  getGeoPlaceFor(myPlace, myPlace_reg,
 		  function(myGeoPlace){ //this parameter-function determines, what happens after a location has been found.
 		    myLeaflet["map"].setView([myGeoPlace["lat"], myGeoPlace["lng"]], 15);
 	        myLeaflet.marker = L.marker([myGeoPlace["lat"], myGeoPlace["lng"]]).addTo(myLeaflet["map"]);
 	        myLeaflet["marker"].bindPopup("<h2>".concat(myGeoPlace["name"]).concat("</h2>")
+	          + ($("#PlaceName-reg").text()!='' ? ' (' + $("#PlaceName-reg").text() + ')' : "")
        	      .concat(' <button type="button" onClick="chooseLocation();">Wrong place?</button> ')).openPopup();
 		  }
 	  );
@@ -22,20 +25,22 @@ $(document).ready(function(){
 	}
 });
 
-function getGeoPlaceFor(nameOfPlace, then){
+function getGeoPlaceFor(nameOfPlace, nameOfPlace_reg, then){
     var geoPlace = new Object();
     //call a mom-service to look into the database if there is a geocoding entry for the specified nameOfPlace.
     //If so, return the latitude and longitude from the database.
     $.ajax({
       url: $('#checkForLocationService').text(),
-      data: "placename=" + nameOfPlace,
+      data: "placename=" + nameOfPlace
+            + "&placename-reg=" + nameOfPlace_reg,
       statusCode: {
         200: function(data) { //since the logic is inside this status 200 block, also the geonames-api further down will only be called, when our server works fine, i.e. returned HTTP 200 ok.
            $xml = $( data );
            geoPlace.name = $xml.find( "name" ).text();
+           geoPlace.name_reg = $xml.find("name_reg").text();
            geoPlace.lat = $xml.find( "lat" ).text();
            geoPlace.lng = $xml.find( "lng" ).text();
-           if(geoPlace["name"] && geoPlace["lat"] && geoPlace["lng"]){
+           if((geoPlace["name"] || geoPlace["name_reg"]) && geoPlace["lat"] && geoPlace["lng"]){ //will even place a marker, if only one of "name" or "name_reg" is present.
              then(geoPlace);
            }else{
              // if we came this far, in this case there was no complete entry for the nameOfPlace in our own database, yet.
@@ -50,7 +55,7 @@ function getGeoPlaceFor(nameOfPlace, then){
                       geoPlace.lng = $xml.find( "lng" ).text();
        	              geoPlace.name = $xml.find( "name" ).text();
                       then(geoPlace);
-                      saveLocation(nameOfPlace, geoPlace); //so next time nameOfPlace is queried for, its' lat/lng is already in the database.
+                      saveLocation(nameOfPlace, nameOfPlace_reg, geoPlace); //so next time nameOfPlace is queried for, its' lat/lng is already in the database.
                       }
                  }
     	       });
@@ -88,24 +93,25 @@ function saveLocationThroughMarker(){
       url: $("#saveLocationService").text(),
       type: "POST",
       data: "placename=" + $("#PlaceName").text()
-            + "&placename-reg" + $("#PlaceName-reg").text()
+            + "&placename-reg=" + $("#PlaceName-reg").text()
             + "&lat=" + myLeaflet["currentMarkerLatLng"]["lat"]
             + "&lng=" + myLeaflet["currentMarkerLatLng"]["lng"],
       statusCode: {
         200: function(data) {
            myLeaflet["marker"].closePopup().bindPopup('<h2>'.concat($("#PlaceName").text()).concat('</h2>')
+              + ($("#PlaceName-reg").text()!='' ? ' (' + $("#PlaceName-reg").text() + ')' : "")
              .concat(' <button type="button" onClick="chooseLocation();">Wrong place?</button> ')).openPopup();
            }
       }
     });
 };
 
-function saveLocation(myOwnPlaceName, aPlaceProvidingLatLng){
+function saveLocation(myOwnPlaceName, myOwnPlaceName_reg, aPlaceProvidingLatLng){
 	$.ajax({
 		  url: $("#saveLocationService").text(),
 		  type: "POST",
 		  data: "placename=" + myOwnPlaceName // the decision has been made to save the location to the database with our own (place)name, and use (the geonames) api just as a means to get the lat/lng.
-		        + "&placename-reg" + $("#PlaceName-reg").text()
+		        + "&placename-reg=" + myOwnPlaceName_reg
 		        + "&lat=" + aPlaceProvidingLatLng["lat"]
 	            + "&lng=" + aPlaceProvidingLatLng["lng"],
 		  statusCode: {
