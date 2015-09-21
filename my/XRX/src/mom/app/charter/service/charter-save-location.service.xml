@@ -44,11 +44,11 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$placeName</xrx:name>
-      <xrx:expression>request:get-parameter('placename', ())</xrx:expression>
+      <xrx:expression>request:get-parameter('placename', '')</xrx:expression>
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$placeName-reg</xrx:name>
-      <xrx:expression>request:get-parameter('placename-reg', ())</xrx:expression>
+      <xrx:expression>request:get-parameter('placename-reg', '')</xrx:expression>
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$lat</xrx:name>
@@ -86,7 +86,7 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     let $location :=
       <location>
         <name>{ $placeName }</name>
-        <name_reg>{ $placeName-reg }</name_reg>
+        { if($placeName-reg != '') then <name_reg>$placeName-reg</name_reg> else() }
         <lat>{ $lat }</lat>
         <lng>{ $lng }</lng>
         <who>{ $user-id }</who>
