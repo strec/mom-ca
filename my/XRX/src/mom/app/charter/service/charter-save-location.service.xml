@@ -48,7 +48,7 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$placeName-reg</xrx:name>
-      <xrx:expression>request:get-parameter('placename-reg', '')</xrx:expression>
+      <xrx:expression>request:get-parameter('placename_reg', '')</xrx:expression>
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$lat</xrx:name>
@@ -57,6 +57,22 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     <xrx:variable>
       <xrx:name>$lng</xrx:name>
       <xrx:expression>request:get-parameter('lng', ())</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$geoname_id</xrx:name>
+      <xrx:expression>request:get-parameter('geoname_id', '')</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$country_code</xrx:name>
+      <xrx:expression>request:get-parameter('country_code', ())</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$alternate_names</xrx:name>
+      <xrx:expression>request:get-parameter('alternate_names', ())</xrx:expression>
+    </xrx:variable>
+    <xrx:variable> <!-- this string should contain n "[lang-abbreviation];[actual name]?" with n >= 0 -->
+      <xrx:name>$alternate_name</xrx:name>
+      <xrx:expression>request:get-parameter('alternate_name', ())</xrx:expression>
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$geocoding-collection-uri</xrx:name>
@@ -89,6 +105,10 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
         { if($placeName-reg != '') then <name_reg>$placeName-reg</name_reg> else() }
         <lat>{ $lat }</lat>
         <lng>{ $lng }</lng>
+        <geoname_id>{ $geoname_id }</geoname_id>
+        <country_code>{ $country_code }</country_code>
+        <alternate_names>{ $alternate_names }</alternate_names>
+        <alternate_name>{ $alternate_name }</alternate_name>
         <who>{ $user-id }</who>
       </location>
     let $store-in-database := (: if there is a location with the name in database already, then replace it. else insert it. :)

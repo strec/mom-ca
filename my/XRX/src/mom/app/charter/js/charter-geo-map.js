@@ -35,6 +35,7 @@ $(document).ready(function(){
  */
 function getGeoPlaceFor(nameOfPlace, nameOfPlace_reg, then){
     var geoPlace = new Object();
+    myLeaflet.geoNames = []; //geoName Objects will go in here. Used to store the different hits returned by the geonames api. Needs to be global, because the hits are to be used inside an html select element.
     //call a mom-service to look into the database if there is a geocoding entry for the specified nameOfPlace and/or nameOfPlace_reg.
     //If so, return the latitude and longitude from the database.
     $.ajax({
@@ -50,44 +51,51 @@ function getGeoPlaceFor(nameOfPlace, nameOfPlace_reg, then){
            geoPlace.lng = $xml.find( "lng" ).text();
            if((geoPlace["name"] || geoPlace["name_reg"]) && geoPlace["lat"] && geoPlace["lng"]){ //will even place a marker, if only one of "name" or "name_reg" is present.
              then(geoPlace);
-           }else if(nameOfPlace_reg.length > 0){ // the geonames-api is querried for the charter's cei:placeName/@reg first (if present).
-             // if we came this far, in this case there was no complete entry for the nameOfPlace and/or nameOfPlace_reg in our own database, yet.
+           }else if(nameOfPlace_reg.length > 0 || nameOfPlace.length > 0){ // the geonames-api is querried for the charter's cei:placeName/@reg first (if present).
+               // if we came this far, in this case there was no complete entry for the nameOfPlace and/or nameOfPlace_reg in our own database, yet.
+               // nameOfPlace_reg contains normalized form of name. So it will be queried for when both are present.
+    	       var query_term = (nameOfPlace_reg.length > 0) ? nameOfPlace_reg : nameOfPlace;
                $.ajax({
-                 url: 'http://api.geonames.org/postalCodeSearch?',
-      	         data: "placename=" + nameOfPlace_reg + "&maxRows=1&username=monaslisa",
-                 statusCode: {
-                   200: function(data) {
-                          $xml = $( data );
-                          geoPlace.lat = $xml.find( "lat" ).text();
-                          geoPlace.lng = $xml.find( "lng" ).text();
-       	                  geoPlace.name = $xml.find( "name" ).text();
-       	                  if(geoPlace["name"]){
-                            then(geoPlace);
-                            saveLocation(nameOfPlace, nameOfPlace_reg, geoPlace); //so next time nameOfPlace is queried for, its' lat/lng is already in the database.
-                          }else{
-                            // here, we could specify what to do, after the charter's cei:placeName/@reg did not lead to any hits from the api.
-                            // Since the @reg attribute contains the normalized form of the placeName, on first sight it is not viable
-                            // to query the api for the contents of cei:placeName (i.e. nameOfPlace), because it is unlikely to return anything, either, now.
-                            noGeoPlaceFound();
-                          }
-                        }
-                 }
-    	       });
-           }else if(nameOfPlace.length > 0){ // there was no nameOfPlace_reg, so query is against nameOfPlace (if present)
-               $.ajax({
-                    url: 'http://api.geonames.org/postalCodeSearch?',
-                    data: "placename=" + nameOfPlace + "&maxRows=1&username=monaslisa",
+                    url: 'http://api.geonames.org/search?',
+      	            data: "q=" + query_term + "&style=full&maxRows=10&username=monaslisa",
                     statusCode: {
                         200: function(data) {
                             $xml = $( data );
-                            geoPlace.lat = $xml.find( "lat" ).text();
-                            geoPlace.lng = $xml.find( "lng" ).text();
-                            geoPlace.name = $xml.find( "name" ).text();
-                            if(geoPlace["name"]){
-                              then(geoPlace);
-                              saveLocation(nameOfPlace, nameOfPlace_reg, geoPlace);
+                            // How many hits did the remote api return?
+                            var iterations = parseInt($xml.find( "totalResultsCount" ).text());
+                            // we only need 10 hits maximum.
+                            if(iterations > 10) iterations = 10;
+                            $xml.find( "geoname" ).each(function( index ) { // .each index starts with 1.
+                               //break out of .each loop if there are more hits than we want.
+                               if(index > iterations) return false;
+                               //push a new reduced Object with all the nodes we want to have to the geoNames array
+                               geoName = new Object();
+                               geoName.lat_node = $(this).find( "lat" );
+                               geoName.lng_node = $(this).find( "lng" );
+                               geoName.name_node = $(this).find( "name");
+                               geoName.geonameId_node = $(this).find( "geonameId" );
+                               geoName.countryCode_node = $(this).find( "countryCode" );
+                               geoName.alternateName_nodes = $(this).find( "alternateName" ); //there can be multiple
+                               geoName.alternateNames_node = $(this).find( "alternateNames" ); //There is only one node of this kind. It contains all the alternate Names comma-separated.
+                               myLeaflet["geoNames"].push(geoName);
+                            });
+                            // if there is one, we take the first hit of the geoNames-api to display it on the map and also save the first hit to our local database.
+                            if(myLeaflet["geoNames"][0]["name_node"].text()){
+                                //reusing geoPlace here, because if we came this far, the geoPlace is pretty much empty.
+                                geoPlace.lat = myLeaflet["geoNames"][0]["lat_node"].text();
+                                geoPlace.lng = myLeaflet["geoNames"][0]["lng_node"].text();
+                                geoPlace.name = nameOfPlace;
+                                then(geoPlace);
+                                saveLocation(nameOfPlace, nameOfPlace_reg, myLeaflet["geoNames"][0]); //use the first hit of geonames api to write location info to the database //so next time nameOfPlace is queried for, its' Geo Info and especially lat/lng is already in the database.
                             }else{
-                              noGeoPlaceFound();
+                                /*
+                                 * here, in case we queried for nameOfPlace_reg, we could specify what to do, after the charter's cei:placeName/@reg did not lead to any hits from the api.
+                                 * Since the @reg attribute contains the normalized form of the placeName, on first sight it is not viable
+                                 * to query the api for the contents of cei:placeName (i.e. nameOfPlace), because it is unlikely to return anything, either, now.
+                                 * If we instead queried for the cei:placeName/text() already, then we did not have a normalized form in cei:placeName/@reg to begin with
+                                 * and thus have no other search term to consider.
+                                */
+                                noGeoPlaceFound();
                             }
                         }
                     }
@@ -139,11 +147,12 @@ function saveLocationThroughMarker(){
 	//here put an ajax call to a mom-service, which takes the currentMarkerLatLng
 	//and saves it into a special file together with the $("#PlaceName")
 	//( this is the same file that is queried at the start of getGeoPlaceFor(...) )
+	// Of course, only the name of the place and its' lat/lng are saved, because e. g. there is no geonames_id. Even the country_code is not known without further lat/lng processing.
 	$.ajax({
       url: $("#saveLocationService").text(),
       type: "POST",
       data: "placename=" + $("#PlaceName").text()
-            + "&placename-reg=" + $("#PlaceName-reg").text()
+            + "&placename_reg=" + $("#PlaceName-reg").text()
             + "&lat=" + myLeaflet["currentMarkerLatLng"]["lat"]
             + "&lng=" + myLeaflet["currentMarkerLatLng"]["lng"],
       statusCode: {
@@ -156,14 +165,29 @@ function saveLocationThroughMarker(){
     });
 };
 
-function saveLocation(myOwnPlaceName, myOwnPlaceName_reg, aPlaceProvidingLatLng){
+function saveLocation(myOwnPlaceName, myOwnPlaceName_reg, aPlaceProvidingGeoInfo){
+
+    // store all the alternateName node information inside a single string
+    var alternateName_nodes_encoded = '';
+    aPlaceProvidingGeoInfo["alternateName_nodes"].each(
+        function(index) {
+            alternateName_nodes_encoded += ( $(this).attr("lang") ).concat(';').concat( $(this).text() ).concat('?');
+        }
+    );
+
 	$.ajax({
 		  url: $("#saveLocationService").text(),
 		  type: "POST",
-		  data: "placename=" + myOwnPlaceName // the decision has been made to save the location to the database with our own (place)name, and use (the geonames) api just as a means to get the lat/lng.
-		        + "&placename-reg=" + myOwnPlaceName_reg
-		        + "&lat=" + aPlaceProvidingLatLng["lat"]
-	            + "&lng=" + aPlaceProvidingLatLng["lng"],
+		  data: {
+		      placename: myOwnPlaceName, // the decision has been made to save the location to the database with our own (place)name, and use (the geonames) api just as a means to get the lat/lng and other geo info.
+		      placename_reg: myOwnPlaceName_reg,
+		      lat: aPlaceProvidingGeoInfo["lat_node"].text(),
+	          lng: aPlaceProvidingGeoInfo["lng_node"].text(),
+	          geoname_id: aPlaceProvidingGeoInfo["geonameId_node"].text(),
+	          country_code: aPlaceProvidingGeoInfo["countryCode_node"].text(),
+	          alternate_names: aPlaceProvidingGeoInfo["alternateNames_node"].text(),
+	          alternate_name: alternateName_nodes_encoded
+	          },
 		  statusCode: {
 			    200: function(data) {
                   //this is happening in the background anyway, so do nothing.
