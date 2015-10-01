@@ -18,13 +18,34 @@ $(document).ready(function(){
 	        myLeaflet.marker = L.marker([myGeoPlace["lat"], myGeoPlace["lng"]]).addTo(myLeaflet["map"]);
 	        myLeaflet["marker"].bindPopup("<h2>".concat(myGeoPlace["name"]).concat("</h2>")
 	          + ($("#PlaceName-reg").text()!='' ? ' (' + $("#PlaceName-reg").text() + ')' : "")
-       	      .concat(' <button type="button" onClick="chooseLocation();">Wrong place?</button> ')).openPopup();
+       	      .concat(' <button type="button" onClick="').concat((myLeaflet["geoNames"].length > 0) ? 'chooseDifferentApiHit();' : 'chooseLocation();').concat('">Wrong place?</button> ')).openPopup();
 		  }
 	  );
 	}else{
 	  $("#geo-map").remove();
 	}
 });
+
+function chooseDifferentApiHit() {
+    var options = '';
+    for(i=0; i < myLeaflet["geoNames"].length; i++) {
+      options += '<option>' + myLeaflet["geoNames"][i]["name_node"].text() + ' (' + myLeaflet["geoNames"][i]["countryCode_node"].text() + ')' + '</option>';
+    }
+    myLeaflet["marker"].bindPopup("<h2>".concat($("#PlaceName").text()).concat("</h2>")
+	          + ($("#PlaceName-reg").text()!='' ? ' (' + $("#PlaceName-reg").text() + ')' : "")
+	          .concat('<select id="apiHitChoser">').concat(options).concat('</select>')
+	          .concat(' <button type="button" onClick="saveLocation($(\'#PlaceName\').text(), $(\'#PlaceName-reg\').text(), myLeaflet[\'geoNames\'][$(\'#apiHitChoser\')[0].selectedIndex]);/*SAVE THE LOCATION: BUSINESS AS USUAL*/').concat('">Right place!</button> ')
+	          .concat(' <button type="button" onClick="chooseLocation();').concat('">Not among them?</button> ')).openPopup();
+	//react to changes in the html select element containing the different api hits.
+	$( document ).on('change', '#apiHitChoser', function() {
+	    //set the lat/lng of the marker based on the selected api hit's lat and lng properties.
+	    var api_hit_lat = myLeaflet["geoNames"][$(this)[0].selectedIndex]["lat_node"].text();
+	    var api_hit_lng = myLeaflet["geoNames"][$(this)[0].selectedIndex]["lng_node"].text();
+        myLeaflet["marker"].setLatLng([api_hit_lat, api_hit_lng]);
+    });
+};
+
+
 
 /*
  * @param: nameOfPlace (string)
