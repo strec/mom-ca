@@ -71,7 +71,13 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
   <xrx:body>
     {
 
-    $placeName-location
+      (: sensitive information is left out :)
+      element location {
+        $placeName-location/name,
+        $placeName-location/name_reg,
+        $placeName-location/lat,
+        $placeName-location/lng
+      }
 
     }
   </xrx:body>
