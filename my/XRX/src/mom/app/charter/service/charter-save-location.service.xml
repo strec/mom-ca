@@ -90,6 +90,14 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
       <xrx:name>$placeName-location</xrx:name>
       <xrx:expression>$locations/location[name = $placeName or name_reg = $placeName-reg][1]</xrx:expression>
     </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$incremental-id-node</xrx:name>
+      <xrx:expression>$geocoding-collection//latest_incremental_id</xrx:expression>
+    </xrx:variable>
+    <xrx:variable>
+      <xrx:name>$incremental-id-number-plus-1</xrx:name>
+      <xrx:expression>number($incremental-id-node/text()) + 1</xrx:expression>
+    </xrx:variable>
   </xrx:variables>
   <xrx:init>
     <xrx:processor>
@@ -98,6 +106,8 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
   </xrx:init>
   <xrx:body>
     {
+    let $new-incremental-id-node :=
+      <latest_incremental_id>{ $incremental-id-number-plus-1 }</latest_incremental_id>
 
     let $location :=
       <location>
@@ -109,8 +119,10 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
         <country_code>{ $country_code }</country_code>
         <alternate_names>{ $alternate_names }</alternate_names>
         <alternate_name>{ $alternate_name }</alternate_name>
+        <local_id>{ $incremental-id-number-plus-1 }</local_id>
         <who>{ $user-id }</who>
       </location>
+
     let $store-in-database := (: if there is a location with the name in database already, then replace it. else insert it. :)
       if(xmldb:is-authenticated()) then
         if($placeName-location) then
@@ -118,6 +130,13 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
         else
           system:as-user('admin', conf:param('dba-password'), update insert $location into $locations)
       else()
+
+    (: also save the incremented id into the file. :)
+    let $store-incremented-id :=
+      if(xmldb:is-authenticated()) then
+        system:as-user('admin', conf:param('dba-password'), update replace $incremental-id-node with $new-incremental-id-node)
+      else()
+
     return ()
 
     }
