@@ -1,5 +1,6 @@
 var myLeaflet = {}; //global myLeaflet object used to keep access to objects across functions.
 $(document).ready(function(){
+    if(myLeaflet["map"] != undefined) myLeaflet["map"].remove();
 	$("#the-map-goes-here").css("position","relative").css("margin","5px 5px 0px").css("float","left").css("width","950px");
 	$("#geo-map").appendTo("#the-map-goes-here");
 
