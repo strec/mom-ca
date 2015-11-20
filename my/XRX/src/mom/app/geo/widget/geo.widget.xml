@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><xrx:widget xmlns:xrx="http://www.monasterium.net/NS/xrx" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms">
+    <xrx:id>tag:www.monasterium.net,2011:/mom/widget/geo</xrx:id>
+    <xrx:title>
+        <xrx:i18n>
+            <xrx:key>geo</xrx:key>
+            <xrx:default>Geo</xrx:default>
+        </xrx:i18n>
+    </xrx:title>
+    <xrx:subtitle/>
+    <xrx:description/>
+    <xrx:author>strec</xrx:author>
+    <xrx:licence>
+        This is a component file of the VdU Software for a Virtual Research
+        Environment for the handling of Medieval charters.
+        
+        As the source code is available here, it is somewhere between an alpha-
+        and a beta-release, may be changed without any consideration of
+        backward compatibility of other parts of the system, therefore,
+        without any notice.
+        
+        This file is part of the VdU Virtual Research Environment Toolkit
+        (VdU/VRET).
+        
+        The VdU/VRET is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+        
+        VdU/VRET is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+        GNU General Public License for more details.
+        
+        You should have received a copy of the GNU General Public License
+        along with VdU/VRET. If not, see http://www.gnu.org/licenses.
+        
+        We expect VdU/VRET to be distributed in the future with a license more
+        lenient towards the inclusion of components into other systems, once
+        it leaves the active development stage.
+    </xrx:licence>
+   <!-- <xrx:constructor>
+        <xrx:parameter>
+            <xrx:name>$constructor:placeNames</xrx:name>
+            <xrx:default>''</xrx:default>
+        </xrx:parameter>
+    </xrx:constructor>-->
+    <xrx:variables>
+        <xrx:variable>
+            <xrx:name>$foo</xrx:name>
+            <xrx:expression>()</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$metadata-scope</xrx:name>
+            <xrx:expression>metadata:base-collection('archive', 'public')</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$archives-in-eag-format</xrx:name> <!-- Encoded Archival Guide -->
+            <xrx:expression>$metadata-scope//eag:eag</xrx:expression>
+        </xrx:variable>
+        <!-- look into fonds.widget.xml for how to extract more detailed information about the different archives. It has been done there before. -->
+    </xrx:variables>
+    <xrx:portal>tag:www.monasterium.net,2011:/mom/portal/fullscreen</xrx:portal>
+    <xrx:init>
+        <xrx:processor>
+            <xrx:xformsflag>false</xrx:xformsflag>
+            <xrx:jqueryflag>true</xrx:jqueryflag>
+        </xrx:processor>
+    </xrx:init>
+    <xrx:csss>
+        <style type="text/css">
+            /* leaflet map container */
+            #map {{
+            margin: auto;
+            height: 800px;
+            width: 100%;
+            }}
+            #archive-selector {{
+            max-width: 30%;
+            }}
+            .title {{
+            font-weight: bold;
+            }}
+        </style>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+    </xrx:csss>
+    <xrx:jss>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/jquery</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/core</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/widget</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/position</xrx:resource>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster-src.js"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>-->
+        <!--<xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/leaflet-markercluster</xrx:resource>-->
+        <xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/my-geo</xrx:resource>
+    </xrx:jss>
+    <xrx:view>
+        <div id="getChartersInsideFondService" style="display: none;">{ conf:param('request-root')}service/get-charters-inside-fond</div>
+        <div id="request-root" style="display: none;">{ conf:param('request-root') }</div>
+        <div id="charters-with-placeName"></div>
+        <div id="chartermarker" style="display: none;">
+            <xrx:resource alt="chartermarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarker_small</xrx:resource>
+        </div>
+        <div id="chartermarkershadow" style="display: none;">
+            <xrx:resource alt="chartermarkerahadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkershadow_small</xrx:resource>
+        </div>
+        <div id="all-my-archives">
+            <select id="archive-selector">
+            {
+              for $archive in $archives-in-eag-format
+              order by $archive//eag:repositorid/text() ascending
+              return 
+              <option value="{ $archive//eag:repositorid/text() }">{ $archive//eag:repositorid/text() } ({ $archive//eag:autform/text() })</option>
+            }
+            </select>
+        </div>
+        <div data-demoid="1e32aa17-697e-45ee-8e5b-d933c4fd9063" id="map" />
+    </xrx:view>
+</xrx:widget>

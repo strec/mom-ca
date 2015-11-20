@@ -1,0 +1,119 @@
+<xrx:service xmlns:xrx="http://www.monasterium.net/NS/xrx" 
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:cei="http://www.monasterium.net/NS/cei">
+    <xrx:id>tag:www.monasterium.net,2011:/mom/service/get-charters-inside-fond</xrx:id>
+    <xrx:title>
+        <xrx:i18n>
+            <xrx:key></xrx:key>
+            <xrx:default></xrx:default>
+        </xrx:i18n>
+    </xrx:title>
+    <xrx:subtitle />
+    <xrx:description />
+    <xrx:author>strec</xrx:author>
+    <xrx:licence>
+        This is a component file of the VdU Software for a Virtual Research
+        Environment for the handling of Medieval charters.
+        
+        As the source code is available here, it is somewhere between an alpha-
+        and a beta-release, may be changed without any consideration of
+        backward compatibility of other parts of the system, therefore,
+        without any notice.
+        
+        This file is part of the VdU Virtual Research Environment Toolkit
+        (VdU/VRET).
+        
+        The VdU/VRET is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+        
+        VdU/VRET is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+        GNU General Public License for more details.
+        
+        You should have received a copy of the GNU General Public License
+        along with VdU/VRET. If not, see http://www.gnu.org/licenses.
+    </xrx:licence>
+    <xrx:variables>
+        <!-- the archive we want to get the charters from -->
+        <xrx:variable>
+            <xrx:name>$queried-for-archive-id</xrx:name>
+            <xrx:expression>request:get-parameter('archive-id', ())</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$metadata-charter-base-collection-path</xrx:name>
+            <xrx:expression>metadata:base-collection-path('charter', 'public')</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$archive-path-inside-charter-base-collection</xrx:name>
+            <xrx:expression>concat($metadata-charter-base-collection-path, $queried-for-archive-id)</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$archive-collection-inside-charter-base-collection</xrx:name>
+            <xrx:expression>collection($archive-path-inside-charter-base-collection)</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$charters-of-archive</xrx:name>
+            <xrx:expression>$archive-collection-inside-charter-base-collection//atom:entry</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$charters-with-placename-inside-issued</xrx:name>
+            <xrx:expression>
+                for $charter in $charters-of-archive
+                return
+                  root($charter//cei:issued/cei:placeName[./text() != ''])
+            </xrx:expression>
+        </xrx:variable>
+        <xrx:variable> <!-- not used at all, yet. -->
+            <xrx:name>$charter-IDs</xrx:name>
+            <xrx:expression>$charters-of-archive//atom:id</xrx:expression>
+        </xrx:variable>
+        <!-- used for looking into geocoding collection while retrieving geo-info. -->
+        <xrx:variable>
+            <xrx:name>$geocoding-collection-uri</xrx:name>
+            <xrx:expression>conf:param('geocoding-db-base-uri')</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$geocoding-collection</xrx:name>
+            <xrx:expression>collection($geocoding-collection-uri)</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$locations</xrx:name>
+            <xrx:expression>$geocoding-collection//locations</xrx:expression>
+        </xrx:variable>
+        <!-- precondition is of course that there is a conf-param 'geocoding-db-base-uri' that makes sense.
+     File with entries needs to have at least empty <locations></locations> inside. -->        
+    </xrx:variables>
+    <xrx:init>
+        <xrx:processor>
+            <xrx:translateflag>false</xrx:translateflag>
+        </xrx:processor>
+    </xrx:init>
+    <xrx:body>
+        {
+        
+        <result>
+          {
+          
+            for $charter in $charters-with-placename-inside-issued
+            let $useful-info-from-atom-id := substring-after($charter//atom:id/text(), "tag:www.monasterium.net,2011:/charter/")
+            (: let $more-useful-info-from-atom-id := substring-after($useful-info-from-atom-id, "/") :)
+            let $placeName := $charter//cei:issued/cei:placeName/text()
+            let $placeName-reg := $charter//cei:issued/cei:placeName/@reg
+            let $location-match := $locations/location[name = $placeName or name_reg = $placeName-reg][1]
+            return 
+                element charter{
+                  element ident{$useful-info-from-atom-id}, 
+                  $location-match/name,
+                  $location-match/name_reg,
+                  $location-match/lat,
+                  $location-match/lng
+                }
+          }
+        </result>
+        
+        }
+    </xrx:body>
+</xrx:service>

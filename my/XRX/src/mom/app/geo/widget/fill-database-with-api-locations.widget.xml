@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><xrx:widget xmlns:xrx="http://www.monasterium.net/NS/xrx" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms">
+    <xrx:id>tag:www.monasterium.net,2011:/mom/widget/fill-database-with-api-locations</xrx:id>
+    <xrx:title>
+        <xrx:i18n>
+            <xrx:key>fill database with api locations</xrx:key>
+            <xrx:default>fill database with api locations</xrx:default>
+        </xrx:i18n>
+    </xrx:title>
+    <xrx:subtitle/>
+    <xrx:description/>
+    <xrx:author>strec</xrx:author>
+    <xrx:licence>
+        This is a component file of the VdU Software for a Virtual Research
+        Environment for the handling of Medieval charters.
+        
+        As the source code is available here, it is somewhere between an alpha-
+        and a beta-release, may be changed without any consideration of
+        backward compatibility of other parts of the system, therefore,
+        without any notice.
+        
+        This file is part of the VdU Virtual Research Environment Toolkit
+        (VdU/VRET).
+        
+        The VdU/VRET is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+        
+        VdU/VRET is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+        GNU General Public License for more details.
+        
+        You should have received a copy of the GNU General Public License
+        along with VdU/VRET. If not, see http://www.gnu.org/licenses.
+        
+        We expect VdU/VRET to be distributed in the future with a license more
+        lenient towards the inclusion of components into other systems, once
+        it leaves the active development stage.
+    </xrx:licence>
+    <xrx:variables>
+        <xrx:variable>
+            <xrx:name>$nothing</xrx:name>
+            <xrx:expression>()</xrx:expression>
+        </xrx:variable>
+        <!--<xrx:variable>
+            <xrx:name>$charter-collection</xrx:name>
+            <xrx:expression>metadata:base-collection('charter', 'public')</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$all-charters</xrx:name>
+            <xrx:expression>$charter-collection//cei:text</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$all-issued-placename-elements</xrx:name>
+            <xrx:expression>$all-charters//cei:issued/cei:placeName[./text() != '']</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$some-issued-placename-elements</xrx:name>
+            <xrx:expression>$all-issued-placename-elements[position() = 400 to 600]</xrx:expression>
+        </xrx:variable>-->
+        <!--
+        <xrx:variable>
+            <xrx:name>$first-occurrence-of-placeName</xrx:name>
+            <xrx:expression>$constructor:placeNames[1]</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$text-of-first-occurrence-of-placeName</xrx:name>
+            <xrx:expression>$first-occurrence-of-placeName/text()</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$string-of-reg-attribute-of-first-occurrence-of-placeName</xrx:name>
+            <xrx:expression>string($first-occurrence-of-placeName/@reg)</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$string-of-reg-attribute-without-special-chars</xrx:name>
+            <xrx:expression>replace($string-of-reg-attribute-of-first-occurrence-of-placeName, '[^A-ZÄÖÜa-zäöüß0-9\-\.\s]+', '')</xrx:expression>
+        </xrx:variable>
+        -->
+    </xrx:variables>
+    <xrx:portal>tag:www.monasterium.net,2011:/mom/portal/empty</xrx:portal>
+    <xrx:init>
+        <xrx:processor>
+            <xrx:xformsflag>false</xrx:xformsflag>
+            <xrx:jqueryflag>true</xrx:jqueryflag>
+        </xrx:processor>
+    </xrx:init>
+    <xrx:csss>
+        <style type="text/css">
+            #map {{
+            margin: auto;
+            height: 400px;
+            width: 100%;
+            }}
+        </style>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    </xrx:csss>
+    <xrx:jss>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/jquery</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/core</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/widget</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/position</xrx:resource>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/fill-database-with-api-locations</xrx:resource>
+    </xrx:jss>
+    <xrx:view>
+        <div>
+            {
+            (:
+            for $element in $some-issued-placename-elements
+            let $placename := $element/text()
+            let $placename-reg := string($element/@reg)
+            let $placename-reg-without-special-chars := replace($placename-reg, '[^A-ZÄÖÜa-zäöüß0-9\-\.\s]+', '')
+            return
+                <div class="placeinfoset">
+                    <placename>{$placename}</placename>
+                    <placename_reg>{$placename-reg-without-special-chars}</placename_reg>
+               </div>
+            :)
+            for $onetwothree in (1 to 3)
+            return ()
+            }
+            <div class="placeinfoset"><placename>Acerra</placename></div>
+            <div class="placeinfoset"><placename>Acquaviva delle Fonti</placename></div>
+            <div class="placeinfoset"><placename>Airola</placename></div>
+            <div class="placeinfoset"><placename>Albano Laziale</placename></div>
+            <div class="placeinfoset"><placename>Altamura</placename></div>
+            <div class="placeinfoset"><placename>Amalfi</placename></div>
+            <div class="placeinfoset"><placename>Andretta-Mattinella</placename></div>
+            <div class="placeinfoset"><placename>Avellino</placename></div>
+            <div class="placeinfoset"><placename>Aversa</placename></div>
+            <div class="placeinfoset"><placename>Avignon</placename></div>
+            <div class="placeinfoset"><placename>Bagnoli del Trigno</placename></div>
+            <div class="placeinfoset"><placename>Bagnoli Irpino</placename></div>
+            <div class="placeinfoset"><placename>Bari</placename></div>
+            <div class="placeinfoset"><placename>Barletta</placename></div>
+            <div class="placeinfoset"><placename>Belmonte Calabro</placename></div>
+            <div class="placeinfoset"><placename>Benevento</placename></div>
+            <div class="placeinfoset"><placename>Bisaccia</placename></div>
+            <div class="placeinfoset"><placename>Bitonto</placename></div>
+            <div class="placeinfoset"><placename>Blois</placename></div>
+            <div class="placeinfoset"><placename>Bojano</placename></div>
+            <div class="placeinfoset"><placename>Borrello</placename></div>
+            <div class="placeinfoset"><placename>Briatico</placename></div>
+            <div class="placeinfoset"><placename>Brindisi</placename></div>
+            <div class="placeinfoset"><placename>Brussels</placename></div>
+            <div class="placeinfoset"><placename>Bugnara</placename></div>
+            <div class="placeinfoset"><placename>Caggiano</placename></div>
+            <div class="placeinfoset"><placename>Caiazzo</placename></div>
+            <div class="placeinfoset"><placename>Caivano</placename></div>
+            <div class="placeinfoset"><placename>Calaggio</placename></div>
+            <div class="placeinfoset"><placename>Calvi</placename></div>
+            <div class="placeinfoset"><placename>Campana</placename></div>
+            <div class="placeinfoset"><placename>Campi Salentina</placename></div>
+            <div class="placeinfoset"><placename>Campobasso</placename></div>
+            <div class="placeinfoset"><placename>Canosa di Puglia</placename></div>
+            <div class="placeinfoset"><placename>Popoli</placename></div>
+            <div class="placeinfoset"><placename>Capua</placename></div>
+            <div class="placeinfoset"><placename>Caramanico Terme</placename></div>
+            <div class="placeinfoset"><placename>Carinola</placename></div>
+            <div class="placeinfoset"><placename>Caserta</placename></div>
+            <div class="placeinfoset"><placename>Cassino</placename></div>
+            <div class="placeinfoset"><placename>Castel di Sangro</placename></div>
+            <div class="placeinfoset"><placename>Castelcicala</placename></div>
+            <div class="placeinfoset"><placename>Castellammare del Golfo</placename></div>
+            <div class="placeinfoset"><placename>Castellammare di Stabia</placename></div>
+            <div class="placeinfoset"><placename>Castellaneta</placename></div>
+            <div class="placeinfoset"><placename>Castellino del Biferno</placename></div>
+            <div class="placeinfoset"><placename>Castelpetroso</placename></div>
+            <div class="placeinfoset"><placename>Catanzaro</placename></div>
+            <div class="placeinfoset"><placename>Caulonia</placename></div>
+            <div class="placeinfoset"><placename>Cava Dè Tirreni</placename></div>
+            <div class="placeinfoset"><placename>Celenza sul Trigno</placename></div>
+            <div class="placeinfoset"><placename>Ceppaloni</placename></div>
+            <div class="placeinfoset"><placename>Cercepiccola</placename></div>
+            <div class="placeinfoset"><placename>Cerignola</placename></div>
+                <div class="placeinfoset"><placename>Cerreto Sannita</placename></div>
+                <div class="placeinfoset"><placename>Circello</placename></div>
+                <div class="placeinfoset"><placename>Cittaducale</placename></div>
+                <div class="placeinfoset"><placename>Colli a Volturno</placename></div>
+                <div class="placeinfoset"><placename>Conca della Campania</placename></div>
+                <div class="placeinfoset"><placename>Corleto Monforte</placename></div>
+                <div class="placeinfoset"><placename>Cosenza</placename></div>
+                <div class="placeinfoset"><placename>Crotone</placename></div>
+                <div class="placeinfoset"><placename>Cuccaro Vetere</placename></div>
+                <div class="placeinfoset"><placename>Eboli</placename></div>
+                <div class="placeinfoset"><placename>Famagusta</placename></div>
+                <div class="placeinfoset"><placename>Farfa</placename></div>
+                <div class="placeinfoset"><placename>Fragneto L’Abate</placename></div>
+                <div class="placeinfoset"><placename>Ferentino</placename></div>
+                <div class="placeinfoset"><placename>Ferrandina</placename></div>
+                <div class="placeinfoset"><placename>Filogaso</placename></div>
+                <div class="placeinfoset"><placename>Florence</placename></div>
+                <div class="placeinfoset"><placename>Foggia</placename></div>
+                <div class="placeinfoset"><placename>Foglianise</placename></div>
+                <div class="placeinfoset"><placename>Terranovav</placename></div>
+                <div class="placeinfoset"><placename>Frascati</placename></div>
+                <div class="placeinfoset"><placename>Gaeta</placename></div>
+                <div class="placeinfoset"><placename>Gallicano nel Lazio</placename></div>
+                <div class="placeinfoset"><placename>Gallicchio</placename></div>
+                <div class="placeinfoset"><placename>Genazzano</placename></div>
+                <div class="placeinfoset"><placename>Genoa</placename></div>
+                <div class="placeinfoset"><placename>Gerace</placename></div>
+                <div class="placeinfoset"><placename>Gioi</placename></div>
+                <div class="placeinfoset"><placename>Giugliano in Campania</placename></div>
+                <div class="placeinfoset"><placename>Gragnano</placename></div>
+                <div class="placeinfoset"><placename>Gravina in Puglia</placename></div>
+                <div class="placeinfoset"><placename>Guardialfiera</placename></div>
+                <div class="placeinfoset"><placename>Guardia Lombardi</placename></div>
+                <div class="placeinfoset"><placename>Guardia Sanframondi</placename></div>
+                <div class="placeinfoset"><placename>Ischia</placename></div>
+                <div class="placeinfoset"><placename>Isernia</placename></div>
+                <div class="placeinfoset"><placename>Lapio</placename></div>
+                <div class="placeinfoset"><placename>Lavello</placename></div>
+                <div class="placeinfoset"><placename>Lecce</placename></div>
+                <div class="placeinfoset"><placename>Leverano</placename></div>
+                <div class="placeinfoset"><placename>Lodi</placename></div>
+                <div class="placeinfoset"><placename>Maddaloni</placename></div>
+                <div class="placeinfoset"><placename>Madrid</placename></div>
+                <div class="placeinfoset"><placename>Magliano Vetere</placename></div>
+                <div class="placeinfoset"><placename>Republic of Malta</placename></div>
+                <div class="placeinfoset"><placename>Marcianise</placename></div>
+                <div class="placeinfoset"><placename>Matera</placename></div>
+                <div class="placeinfoset"><placename>Messina</placename></div>
+                <div class="placeinfoset"><placename>Minervino Murge</placename></div>
+                <div class="placeinfoset"><placename>Minori</placename></div>
+                <div class="placeinfoset"><placename>Molfetta</placename></div>
+                <div class="placeinfoset"><placename>Monopoli</placename></div>
+                <div class="placeinfoset"><placename>Montalto di Castro</placename></div>
+                <div class="placeinfoset"><placename>Monte Sant'Angelo</placename></div>
+                <div class="placeinfoset"><placename>Montefiascone</placename></div>
+                <div class="placeinfoset"><placename>Montefusco</placename></div>
+                <div class="placeinfoset"><placename>Montesarchio</placename></div>
+                <div class="placeinfoset"><placename>Morano Calabro</placename></div>
+                <div class="placeinfoset"><placename>Morcone</placename></div>
+                <div class="placeinfoset"><placename>Mugnano di Napoli</placename></div>
+                <div class="placeinfoset"><placename>Muro Lucano</placename></div>
+                <div class="placeinfoset"><placename>Napoli</placename></div>
+                <div class="placeinfoset"><placename>Nocera Inferiorev</placename></div>
+                    <div class="placeinfoset"><placename>Nola</placename></div>
+                    <div class="placeinfoset"><placename>Nürnberg</placename></div>
+                    <div class="placeinfoset"><placename>Novi Velia</placename></div>
+                    <div class="placeinfoset"><placename>Nusco</placename></div>
+                    <div class="placeinfoset"><placename>Ospedaletto d’Alpinolo</placename></div>
+                    <div class="placeinfoset"><placename>Otranto</placename></div>
+                    <div class="placeinfoset"><placename>Padova</placename></div>
+                    <div class="placeinfoset"><placename>Padula</placename></div>
+                    <div class="placeinfoset"><placename>Paupisi</placename></div>
+                    <div class="placeinfoset"><placename>Pavia</placename></div>
+                    <div class="placeinfoset"><placename>Piedimonte Matese</placename></div>
+                    <div class="placeinfoset"><placename>Pietraferrazzana</placename></div>
+                    <div class="placeinfoset"><placename>Pisa</placename></div>
+                    <div class="placeinfoset"><placename>Pisciotta</placename></div>
+                    <div class="placeinfoset"><placename>Plaesano</placename></div>
+                    <div class="placeinfoset"><placename>Petilia Policastro</placename></div>
+                    <div class="placeinfoset"><placename>Pollena Trocchia</placename></div>
+                    <div class="placeinfoset"><placename>Torrecuso</placename></div>
+                    <div class="placeinfoset"><placename>Pontelatone</placename></div>
+                    <div class="placeinfoset"><placename>Popoli</placename></div>
+                    <div class="placeinfoset"><placename>Positano</placename></div>
+                    <div class="placeinfoset"><placename>Potenza</placename></div>
+                    <div class="placeinfoset"><placename>Pozzuoli</placename></div>
+                    <div class="placeinfoset"><placename>Quindici</placename></div>
+                    <div class="placeinfoset"><placename>Rapolla</placename></div>
+                    <div class="placeinfoset"><placename>Scafati</placename></div>
+                    <div class="placeinfoset"><placename>Reggio Calabria</placename></div>
+                    <div class="placeinfoset"><placename>Rende</placename></div>
+                    <div class="placeinfoset"><placename>Ercolano</placename></div>
+                    <div class="placeinfoset"><placename>Rome</placename></div>
+                    <div class="placeinfoset"><placename>Rossano</placename></div>
+                    <div class="placeinfoset"><placename>Ruvo di Puglia</placename></div>
+                    <div class="placeinfoset"><placename>San Benedetto Po</placename></div>
+                    <div class="placeinfoset"><placename>Napoli</placename></div>
+                    <div class="placeinfoset"><placename>Sala</placename></div>
+                    <div class="placeinfoset"><placename>Salerno</placename></div>
+                    <div class="placeinfoset"><placename>San Bartolomeo in Galdo</placename></div>
+                    <div class="placeinfoset"><placename>Ripacandida</placename></div>
+                    <div class="placeinfoset"><placename>San Marino</placename></div>
+                    <div class="placeinfoset"><placename>Solopaca</placename></div>
+                    <div class="placeinfoset"><placename>San Martino Valle Caudina</placename></div>
+                    <div class="placeinfoset"><placename>San Marzano sul Sarno</placename></div>
+                    <div class="placeinfoset"><placename>Sannicandro Garganico</placename></div>
+                    <div class="placeinfoset"><placename>San Severo</placename></div>
+                    <div class="placeinfoset"><placename>Sangineto</placename></div>
+                    <div class="placeinfoset"><placename>Sant'Agata de'Goti</placename></div>
+                    <div class="placeinfoset"><placename>Sant’Agata di Puglia</placename></div>
+                    <div class="placeinfoset"><placename>Vitulano</placename></div>
+                    <div class="placeinfoset"><placename>Santa Maria Capua Vetere</placename></div>
+                    <div class="placeinfoset"><placename>Santa Severina</placename></div>
+                    <div class="placeinfoset"><placename>Sarno</placename></div>
+                    <div class="placeinfoset"><placename>Satriano</placename></div>
+                    <div class="placeinfoset"><placename>Scalea</placename></div>
+                    <div class="placeinfoset"><placename>Segovia</placename></div>
+                    <div class="placeinfoset"><placename>Serino</placename></div>
+                    <div class="placeinfoset"><placename>Sermoneta</placename></div>
+                    <div class="placeinfoset"><placename>Serracapriola</placename></div>
+                    <div class="placeinfoset"><placename>Sessa Aurunca</placename></div>
+                    <div class="placeinfoset"><placename>Sicignano degli Alburni</placename></div>
+                    <div class="placeinfoset"><placename>Siena</placename></div>
+                    <div class="placeinfoset"><placename>Sinopoli</placename></div>
+                    <div class="placeinfoset"><placename>Solofra</placename></div>
+                    <div class="placeinfoset"><placename>Solopaca</placename></div>
+                    <div class="placeinfoset"><placename>Somma Vesuviana</placename></div>
+                    <div class="placeinfoset"><placename>Popoli</placename></div>
+                    <div class="placeinfoset"><placename>Sulmona</placename></div>
+                    <div class="placeinfoset"><placename>Tagliacozzo</placename></div>
+                    <div class="placeinfoset"><placename>Taranto</placename></div>
+                    <div class="placeinfoset"><placename>Taurasi</placename></div>
+                    <div class="placeinfoset"><placename>Teano</placename></div>
+                    <div class="placeinfoset"><placename>Teggiano-Macchiaroli</placename></div>
+                    <div class="placeinfoset"><placename>Telese</placename></div>
+                    <div class="placeinfoset"><placename>Teramo</placename></div>
+                    <div class="placeinfoset"><placename>Terranova da Sibari</placename></div>
+                    <div class="placeinfoset"><placename>Tito</placename></div>
+                    <div class="placeinfoset"><placename>Tocco Caudio</placename></div>
+                    <div class="placeinfoset"><placename>Toledo</placename></div>
+                    <div class="placeinfoset"><placename>Tolmezzo</placename></div>
+                    <div class="placeinfoset"><placename>Torre Annunziata</placename></div>
+                    <div class="placeinfoset"><placename>Torre del Greco</placename></div>
+                    <div class="placeinfoset"><placename>Torrecuso</placename></div>
+                    <div class="placeinfoset"><placename>Trani</placename></div>
+                    <div class="placeinfoset"><placename>Tricarico</placename></div>
+                    <div class="placeinfoset"><placename>Pozzuoli</placename></div>
+                    <div class="placeinfoset"><placename>Troia</placename></div>
+                    <div class="placeinfoset"><placename>Tufara</placename></div>
+                    <div class="placeinfoset"><placename>Tursi</placename></div>
+                    <div class="placeinfoset"><placename>Ulm</placename></div>
+                    <div class="placeinfoset"><placename>Umbriatico</placename></div>
+                    <div class="placeinfoset"><placename>Valencia</placename></div>
+                    <div class="placeinfoset"><placename>Valenzano</placename></div>
+                    <div class="placeinfoset"><placename>Vallata</placename></div>
+                    <div class="placeinfoset"><placename>Vasto</placename></div>
+                    <div class="placeinfoset"><placename>Venafro</placename></div>
+                    <div class="placeinfoset"><placename>Venice</placename></div>
+                    <div class="placeinfoset"><placename>Venosa</placename></div>
+                    <div class="placeinfoset"><placename>Vienna</placename></div>
+                    <div class="placeinfoset"><placename>Villanova del Battista</placename></div>
+                    <div class="placeinfoset"><placename>Bisceglie</placename></div>
+                    <div class="placeinfoset"><placename>Viterbo</placename></div>
+                    <div class="placeinfoset"><placename>Vitulano</placename></div>
+                    <div class="placeinfoset"><placename>Volturara Appula</placename></div>
+            
+            <div id="checkForLocationService" style="display: none;">{ conf:param('request-root')}service/charter-check-for-location</div>
+            <div id="saveLocationService" style="display: none;">{ conf:param('request-root')}service/charter-save-location</div>
+        </div>
+    </xrx:view>
+</xrx:widget>
