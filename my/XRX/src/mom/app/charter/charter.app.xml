@@ -161,6 +161,6 @@ along with VdU/VRET.  If not, see http://www.gnu.org/licenses.
     </xrx:map>
   </xrx:resolver>
   <xrx:conf>
-    <xrx:param name="geocoding-db-base-uri">/db/mom-data/geocoding/</xrx:param>
+    <xrx:param name="geocoding-db-base-uri">/db/mom-data/metadata.geo.public/</xrx:param>
   </xrx:conf>
 </xrx:app>
