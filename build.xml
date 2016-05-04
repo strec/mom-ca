@@ -75,6 +75,7 @@
   <property name="COMPILE" value="system:as-user('admin', '${XRX.password}', util:eval(xs:anyURI('/db/XRX.src/core/app/xrx/compiler.xql')))"/>
   <property name="xrx-live-db-base-collection-path" value="xmldb:exist:///db/${xrx-live-collection-name}"/>
   <property name="xrx-compiler-tmp-file" value=".XRX.compiler.tmp"/>
+  <property name="init-geo-files" value="system:as-user('admin, '${XRX.password}', util:eval(xs:anyURI('/db/XRX.src/mom/app/geo/init-geo-files.xql')))"/>
 
   <path id="classpath-exist-a-core">
     <fileset dir="${exist-home}/lib/core">
@@ -899,8 +900,18 @@ wrapper.java.additional.6=-Djava.io.tmpdir=../../../tools/jetty/tmp
     
     <xdb:xquery xmlns:xdb="http://exist-db.org/ant" uri="xmldb:exist://localhost:${XRX.jetty.port}/xmlrpc/db" query="system:as-user('admin', '${XRX.password}', sm:add-group-member('${GROUP-NAME}', '${USERNAME}'))" user="admin" password="${XRX.password}"/>
   </target>
-  
-  
+
+  <target name="init-geo-collection" depends="exist-classpath"
+    description="Creates database structure needed for geo functionality">
+
+    <echo message="-------------------------"/>
+    <echo message="initializing geo collections and files"/>
+    <echo message="-------------------------"/>
+
+    <xdb:store xmlns:xdb="http://exist-db.org/ant" uri="${xrx-base-xmldb-uri}/${XRX.project-name}-data" createsubcollections="true" createcollection="true" user="admin" password="${XRX.password}" permissions="rwxrwxrwx">
+      <fileset dir="${XRX.project-name}-geo"/>
+    </xdb:store>
+
+  </target>
+
 </project>
-
-
