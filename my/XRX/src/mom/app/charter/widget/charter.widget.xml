@@ -391,10 +391,13 @@ it leaves the active development stage.
     <link href="{ conf:param('request-root') }jquery/themes/base/jquery.ui.all.css" rel="stylesheet"/>
     <style type="text/css">
     
+div {{
+      cursor:default;
+}}
+    
 #charter{{
   position:relative;
-  width:100%;
-  
+  width:100%;  
   
 }}
 
@@ -403,7 +406,12 @@ it leaves the active development stage.
   font-size:130%;
 }}
 
-#graphics, #diplomaticAnalysis, #index, #versions, #tenor, #abstract, #witList, #howToCite, .witness {{
+#graphicheader {{
+  position:relative;
+  float:left;
+  }}
+
+#graphics, #diplomaticAnalysis, #index, #versions, #tenor, #abstract, #decoDesc, #witList, #howToCite, #bibltenor, .witness {{
   position:relative;
   float:left;
   border:solid rgb(240,243,226) 1px;
@@ -414,9 +422,12 @@ it leaves the active development stage.
   margin-bottom:10px;
 }}
 
-#biblabstract, #bibltenor{{
+#biblabstract{{
   position:relative;
-  text-align:right;
+  text-align:left;
+  font-size:0.8em;
+  line-height:normal;
+  padding-top:10px;
 }}
 
 #tenor, #abstract{{
@@ -438,14 +449,15 @@ div.witness-text{{
   border-top:solid rgb(240,243,226) 1px;
 }}
 
-div.witness-graphic,
-  .witness-graphic img{{
+div.witness-graphic{{
   overflow:auto;
   width:49%;
+  border-top: 1px solid #F0F3E2;
 }}
-
+<!-- , .witness-graphic img rausgenommen border-top: 1px solid #F0F3E2;-->
 #graphic{{
-  width:100%;
+  height:150px;
+  padding:10px;
 }}
 
 #issued{{
@@ -455,10 +467,14 @@ div.witness-graphic,
   padding:0px;
 }}
 
-#placeName, #item, #persName{{
-  position:relative;
-  width:385px;
-  float:left;
+#decoDesc ul li[n]{{
+    padding-top:10px;
+}}
+
+<!-- #placeName, #item, #persName{{
+  /*position:relative;*/
+  width:285px; /*vorher 385 */
+  /*float:left;*/
   text-align:left;
   
   margin-left:5px;
@@ -466,6 +482,34 @@ div.witness-graphic,
   margin-top:5px;
   margin-bottom:5px;
   padding:0px;
+}} -->
+div#indexlist {{
+    position:relative;
+    width:40%;
+    float:left;
+    
+}}
+div.port {{  
+  padding:10px 10px 10px 50px;
+  overflow-y:scroll;
+  height:600px;
+  text-align:justify;
+  margin-top:10px;
+ 
+  }}
+div.port p {{
+    font-size:0.8em;
+}} 
+
+span.info_i {{
+    color:white;
+    background-color:#BABABA;
+    font-size:small;
+    vertical-align:super;
+    font-weight:bold;
+    padding: 0 4px;
+    margin-left:10px;
+    
 }}
 
 div.inlinehead, div.greyinlinehead, div.light-green, div.light-green:visited{{
@@ -474,7 +518,8 @@ div.inlinehead, div.greyinlinehead, div.light-green, div.light-green:visited{{
   font-weight:bold;
   width:950px;
   background-color:{ conf:param('color5') };
-  color:rgb(142,163,132);
+  color:rgb(255,255,255);
+  /*color:rgb(142,163,132);*/  
   margin: 0px;
   margin-left: 5px;
   margin-top: 5px;
@@ -487,9 +532,16 @@ div.inlinehead{{
   width:942px !important;
 }}
 
+div.inlinehead div div a, div.inlinehead a {{
+  color:#ffffff !important;
+  text-decoration: none !important;
+  font-weight:normal !important;
+  font-size: 1.2em !important;
+}}
+
 div.p{{
-  /*margin:5px;*/
-  padding:10px;
+  
+  padding:7px;
 }}
 
 div#persName, div#placeName, div#item{{
@@ -501,7 +553,8 @@ div.no-graphic{{
   float:right;
   right:20px;
   top:10px;
-  color:rgb(142,163,132);
+  /*color:rgb(142,163,132);*/
+  color:rgb(0,0,0);
   font-weight:bold;
   bottom:50%;
   z-index:2;
@@ -511,7 +564,8 @@ span.num{{
   position:relative;
   font-weight:bold;
   font-size:150%;
-  color:rgb(142,163,132);
+  /*color:rgb(142,163,132);*/
+  color:rgb(255,255,255);
 }}
 
 .fn-link{{
@@ -537,14 +591,23 @@ div.lang-select{{
 
 #prev{{
   float: left;
+  margin-right:10px;
 }}
 
 #next{{
-  float:right;
+  float:left;
+}}
+
+img#ein,
+img#aus {{
+    margin-right:10px;
+    margin-top:5px;
+    position:relative;
+    float:left;
 }}
 
 #downloads{{
-  margin-top: 10px;
+  margin-top: -4em;
   clear: left;
   float: right;
 }}
@@ -562,12 +625,14 @@ div.lang-select{{
 }}
 
 .actions{{
-  position:relative;
+  clear:right;
+  position:relative;  
   float:right;
-  width:200px;
+  width:32.5%;
   background-color: #ffe3d9;
   padding: 10px;
   margin-right: 3px;
+  margin-top:5px;
 }}
 
 .actions a{{
@@ -586,6 +651,11 @@ div.lang-select{{
   float:left;
 }}
 
+p#first {{
+    padding-top: 30px !important;
+    margin-top:30px !important;    
+}}
+
 .heading-center{{
   position:relative;
   text-align:center;
@@ -593,8 +663,8 @@ div.lang-select{{
 
 .heading-center *{{
   font-size:150%;
-  font-weight:bold;
-  color:#EF6A2F;
+  font-weight:bold;  
+  /*color:#000000 !important;*/
   text-align:center;
 }}
 
@@ -624,7 +694,8 @@ div.lang-select{{
 }}
 
 #noteBobble-1 .xfLabel{{ 
-  color:rgb(142,163,132);
+  /*color:rgb(142,163,132);*/
+  color:rgb(255,255,255);
   font-weight:bold;
 }}   
 
@@ -659,7 +730,7 @@ div.lang-select{{
 
 /* cei elements */
 
-.cei-lb, .cei-add, .cei-corr, .cei-reg{{
+.cei-lb, .cei-add, .cei-reg{{
   display: none;
 }}
 
@@ -670,6 +741,7 @@ div.lang-select{{
 cei-recipient {{
   letter-spacing: 2px;
 }}
+
 
       </style>
 
@@ -1078,15 +1150,15 @@ cei-recipient {{
     <xrx:div>
       <xrx:key>how-to-cite</xrx:key>
       <xrx:view>
-        <div class="inlinehead">
-          <a href="javascript:showHideDiv('howToCite', '')">
+        <div class="inlinehead cat">
+          <a href="javascript:showHideDiv_neu('howToCite', '')">
           <xrx:i18n>
             <xrx:key>how-to-cite</xrx:key>
             <xrx:default>How to cite</xrx:default>
           </xrx:i18n>
           </a>
         </div>
-        <div id="howToCite" style="display: none">
+        <div id="howToCite" style="display:none">
           <div class="p">
            <p>
          <!-- { if($wcharter:context = 'fond') then
@@ -1222,12 +1294,18 @@ cei-recipient {{
           </xrx:parameter>
         </xrx:pass>
       </xrx:subwidget>
+      <!-- Hide icons that will be used in the charter-view.template.xml -->
+      <div style="display:none" id="Icons">
+       <xrx:resource alt="ausklappen" id="aus" type="image/png" class="ic">tag:www.monasterium.net,2011:/mom/resource/image/path_up</xrx:resource>
+       <xrx:resource alt="einklappen" id="ein" type="image/png" class="ic">tag:www.monasterium.net,2011:/mom/resource/image/path_down</xrx:resource>
+      </div>     
+   
       <div data-demoid="71c8ebdc-bd3a-4327-bdda-8d41279c46cc">
           <xrx:div>my-archive</xrx:div>
         { 
         (: charter view :) 
         let $page :=
-        <page>
+        <page>        
           { template:get('tag:www.monasterium.net,2011:/mom/template/charter-view', false()) }
           { util:expand($wcharter:charter) }
         </page>
@@ -1243,6 +1321,9 @@ cei-recipient {{
         <div data-demoid="92fc737f-0034-4bbc-8d4c-42038dfded81" id="image-tool-widget">
           <script type="text/javascript">
 				    $(document).ready(function(){{
+				        javascript:addInfo();				      
+				        javascript:transport();
+				        javascript:proof(); 
 	            jQuery(document).imageTool({{
 	              requestRoot: "{ conf:param('request-root') }",
 	              charter: "{ $charter:rcharterid }",
@@ -1254,6 +1335,27 @@ cei-recipient {{
 	              lang: "{ $xrx:lang }",
 	     	        requestRoot: "{ conf:param('request-root') }"
 	     	      }});
+
+	     	   console.log(" aus charter.widget");
+	     	  if($("div.no-graphic").length == 0 ){{
+           console.log("no-graphic ist 0 in image-viewer");          
+          var x = $("#graphics").css("display", "block");          
+          }}
+          else {{
+          console.log("no-graphic in image-viewer");
+          var x = $("#graphics").css("display", "none");
+          }}
+           $("div.actions").insertAfter("div#downloads");
+           
+          if($("div#abstract").children().children().length == 0){{
+          console.log("no abstract");
+           var x = $("#abstract").css("display", "none");
+            }}      
+           if($('div#indexlist').children().length == 0){{
+            var x = $("#index").css("display", "none");         
+          
+          }}
+
 				    }});     
   		    </script>
           <xrx:resource id="image-tool-widget-close-button" title="Close Image Tool" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/button_close</xrx:resource>
