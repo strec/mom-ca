@@ -48,6 +48,11 @@ along with VdU/VRET.  If not, see http://www.gnu.org/licenses.
         <xrx:name>my-geo.js</xrx:name>
     </xrx:resource>
     <xrx:resource>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/js/angular-controllers</xrx:atomid>
+      <xrx:relativepath>js/</xrx:relativepath>
+      <xrx:name>angular-controllers.js</xrx:name>
+    </xrx:resource>
+    <xrx:resource>
       <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/image/chartermarker_large</xrx:atomid>
       <xrx:relativepath>image/</xrx:relativepath>
       <xrx:name>chartermarker_large.png</xrx:name>

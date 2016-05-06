@@ -92,30 +92,36 @@
         <xrx:resource>tag:www.monasterium.net,2011:/xrx/resource/jquery/ui/position</xrx:resource>
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster-src.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
         <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>-->
         <!--<xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/leaflet-markercluster</xrx:resource>-->
         <xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/my-geo</xrx:resource>
+        <xrx:resource>tag:www.monasterium.net,2011:/mom/resource/js/angular-controllers</xrx:resource>
     </xrx:jss>
     <xrx:view>
-        <div id="getChartersInsideFondService" style="display: none;">{ conf:param('request-root')}service/get-charters-inside-fond</div>
-        <div id="request-root" style="display: none;">{ conf:param('request-root') }</div>
-        <div id="charters-with-placeName"></div>
-        <div id="chartermarker" style="display: none;">
-            <xrx:resource alt="chartermarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarker_small</xrx:resource>
+        <div id="pseudoBody" ng-app="geoApp">
+            <div id="getChartersInsideFondService" style="display: none;">{ conf:param('request-root')}service/get-charters-inside-fond</div>
+            <div id="request-root" style="display: none;">{ conf:param('request-root') }</div>
+            <div id="charters-with-placeName"></div>
+            <div id="chartermarker" style="display: none;">
+                <xrx:resource alt="chartermarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarker_small</xrx:resource>
+            </div>
+            <div id="chartermarkershadow" style="display: none;">
+                <xrx:resource alt="chartermarkerahadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkershadow_small</xrx:resource>
+            </div>
+            <div id="all-my-archives">
+                <select id="archive-selector">
+                {
+                  for $archive in $archives-in-eag-format
+                  order by $archive//eag:repositorid/text() ascending
+                  return
+                  <option value="{ $archive//eag:repositorid/text() }">{ $archive//eag:repositorid/text() } ({ $archive//eag:autform/text() })</option>
+                }
+                </select>
+            </div>
+            <div ng-controller="PlaceHolderCtrl">
+            </div>
+            <div data-demoid="1e32aa17-697e-45ee-8e5b-d933c4fd9063" id="map" />
         </div>
-        <div id="chartermarkershadow" style="display: none;">
-            <xrx:resource alt="chartermarkerahadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkershadow_small</xrx:resource>
-        </div>
-        <div id="all-my-archives">
-            <select id="archive-selector">
-            {
-              for $archive in $archives-in-eag-format
-              order by $archive//eag:repositorid/text() ascending
-              return 
-              <option value="{ $archive//eag:repositorid/text() }">{ $archive//eag:repositorid/text() } ({ $archive//eag:autform/text() })</option>
-            }
-            </select>
-        </div>
-        <div data-demoid="1e32aa17-697e-45ee-8e5b-d933c4fd9063" id="map" />
     </xrx:view>
 </xrx:widget>
