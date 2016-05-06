@@ -173,9 +173,9 @@ declare function widget:compile-widget($app-name as xs:string,
                         if(not($javascript-debug)) then
                             if($widget/xrx:jss/xrx:resource or $jqueryflag) then 
                                 (
-                                <script type="text/javascript" src="/{ $project-name }/javascript/?atomid={ $widgetid }"/>,
                                 $widget/xrx:jss/xhtml:script,
-                                $portal/xrx:jss/xhtml:script
+                                $portal/xrx:jss/xhtml:script,
+                                <script type="text/javascript" src="/{ $project-name }/javascript/?atomid={ $widgetid }"/>
                                 )
                             else() 
                         else
@@ -183,9 +183,9 @@ declare function widget:compile-widget($app-name as xs:string,
                             let $id := $resource/text()
                             return
                             (
-                            <script type="text/javascript" src="/{ $project-name }/resource/?atomid={ $id }"/>,
                             $widget/xrx:jss/xhtml:script,
-                            $portal/xrx:jss/xhtml:script
+                            $portal/xrx:jss/xhtml:script,
+                            <script type="text/javascript" src="/{ $project-name }/resource/?atomid={ $id }"/>
                             )
                     }
                 </head>,
@@ -226,9 +226,9 @@ declare function widget:compile-widget($app-name as xs:string,
                         if(not($javascript-debug)) then
                             if($widget/xrx:jss/xrx:resource or $jqueryflag) then 
                                 (
-                                <script type="text/javascript" src="/{ $project-name }/javascript/?atomid={ $widgetid }"/> ,
                                 $widget/xrx:jss/xhtml:script,
-                                $portal/xrx:jss/xhtml:script
+                                $portal/xrx:jss/xhtml:script,
+                                <script type="text/javascript" src="/{ $project-name }/javascript/?atomid={ $widgetid }"/>
                                 )
                             else() 
                         else
@@ -236,9 +236,9 @@ declare function widget:compile-widget($app-name as xs:string,
                             let $id := $resource/text()
                             return
                             (
-                            <script type="text/javascript" src="/{ $project-name }/resource/?atomid={ $id }"/>,
                             $widget/xrx:jss/xhtml:script,
-                            $portal/xrx:jss/xhtml:script
+                            $portal/xrx:jss/xhtml:script,
+                            <script type="text/javascript" src="/{ $project-name }/resource/?atomid={ $id }"/>
                             )
                     }
                 </head>,
