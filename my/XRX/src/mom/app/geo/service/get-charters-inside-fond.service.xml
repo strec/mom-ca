@@ -81,7 +81,7 @@
         </xrx:variable>
         <xrx:variable>
             <xrx:name>$locations</xrx:name>
-            <xrx:expression>$geocoding-collection//locations</xrx:expression>
+            <xrx:expression>$geocoding-collection//external_locations</xrx:expression>
         </xrx:variable>
         <!-- precondition is of course that there is a conf-param 'geocoding-db-base-uri' that makes sense.
      File with entries needs to have at least empty <locations></locations> inside. -->        

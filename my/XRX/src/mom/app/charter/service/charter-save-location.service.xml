@@ -84,7 +84,7 @@ along with VdU/VRET. If not, see http://www.gnu.org/licenses.
     </xrx:variable>
     <xrx:variable>
       <xrx:name>$locations</xrx:name>
-      <xrx:expression>$geocoding-collection//locations</xrx:expression>
+      <xrx:expression>$geocoding-collection//external_locations</xrx:expression>
     </xrx:variable>
     <xrx:variable> <!-- possible entry, which contains the placeName (or the placeName_reg) as its' name (name_reg) already.. -->
       <xrx:name>$placeName-location</xrx:name>
