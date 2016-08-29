@@ -275,6 +275,14 @@ We expect VdU/VRET to be distributed in the future with a license more lenient t
                                 </xrx:i18n>
                             </a>
                         </div>
+                        <div class="menu-item">
+                            <a href="{ conf:param('request-root') }geo" target="_blank">
+                                <xrx:i18n>
+                                    <xrx:key>map</xrx:key>
+                                    <xrx:default>Map</xrx:default>
+                                </xrx:i18n>
+                            </a>
+                        </div>
                         <xrx:div>demonstrator-menu-link</xrx:div>
                     </div>
                 </div>
