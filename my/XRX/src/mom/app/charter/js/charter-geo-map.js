@@ -9,8 +9,18 @@ $(document).ready(function(){
 
 	//the geo-map is only needed if there is a place to show.
 	if(myPlace.length > 0 || myPlace_reg.length > 0){
-	  myLeaflet.map = L.map('map');
-	  L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg').addTo(myLeaflet["map"]);
+	  // taken from mapquest leaflet-plugin-documentation
+	  var mapLayer = MQ.mapLayer(), map;
+	  myLeaflet.map = L.map('map', {
+        layers: mapLayer
+	  });
+      L.control.layers({
+        'Map': mapLayer,
+        'Hybrid': MQ.hybridLayer(),
+        'Satellite': MQ.satelliteLayer(),
+        'Dark': MQ.darkLayer(),
+        'Light': MQ.lightLayer()
+      }).addTo(myLeaflet["map"]);
 
       do_your_thing(true);
 

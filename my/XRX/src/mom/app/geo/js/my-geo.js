@@ -3,9 +3,20 @@ $(document).ready(function(){
 	  //seed for repeatable random number sequence.
 	  seed = 2;
 	  my_random_seed = seed;
-	  var map = L.map('map').setView([47.66, 11.21], 5);
-	  L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg').addTo(map);
-
+	  // taken from mapquest leaflet-plugin-documentation
+	  var mapLayer = MQ.mapLayer(), map;
+	  var map = L.map('map', {
+        layers: mapLayer,
+        center: [ 47.66, 11.21 ],
+        zoom: 5
+	  });
+      L.control.layers({
+        'Map': mapLayer,
+        'Hybrid': MQ.hybridLayer(),
+        'Satellite': MQ.satelliteLayer(),
+        'Dark': MQ.darkLayer(),
+        'Light': MQ.lightLayer()
+      }).addTo(map);
 	  //custom charter marker for map
 	  var charterIcon = L.icon({
           iconUrl: $("#chartermarker > img").attr('src'),
