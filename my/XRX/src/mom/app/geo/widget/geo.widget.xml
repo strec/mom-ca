@@ -133,8 +133,8 @@
                     <div class="mdl-tabs__panel is-active" id="map-panel">
                         <div class="mdl-grid">
                             <div class="mdl-cell mdl-cell--2-col">
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                    Button
+                                <button id="show-archives" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                    Show all archives
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--8-col" data-demoid="1e32aa17-697e-45ee-8e5b-d933c4fd9063" id="map" />

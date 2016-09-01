@@ -118,6 +118,10 @@ $(document).ready(function(){
             }
         });
     });
+    
+    $( document ).on('click', '#show-archives', function(){
+        alert("pressed");
+    });
 
 });
 // used to generate a nicely distributed repeatable random numbers sequence
