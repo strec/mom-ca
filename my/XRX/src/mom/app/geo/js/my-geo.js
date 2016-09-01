@@ -29,6 +29,18 @@ $(document).ready(function(){
           shadowSize: [70, 55],
           shadowAnchor: [6, 53]
       });
+      //custom archive marker for map
+      var archiveIcon = L.icon({
+          iconUrl: $("#archivemarker > img").attr('src'),
+          //iconRetinaUrl: ,
+          iconSize: [38, 85],
+          iconAnchor: [18, 80],
+          popupAnchor: [0, -66],
+          shadowUrl: $("#archivemarkershadow > img").attr('src'),
+          //shadowRetinaUrl: ,
+          shadowSize: [70, 55],
+          shadowAnchor: [0, 51]
+      });
 
 	  markers = null;
 	  markers = new L.MarkerClusterGroup({spiderfyDistanceMultiplier: 2});
@@ -120,10 +132,42 @@ $(document).ready(function(){
     });
     
     $( document ).on('click', '#show-archives', function(){
-        alert("pressed");
+      markers.clearLayers();
+        $( document ).find(".archive").each(function(index){
+           var archive_name = $(this).find("archive-name").text();
+           var archive_id = $(this).find("archive-id").text();
+           var latitude = $(this).find("latitude").text();
+           var longitude = $(this).find("longitude").text();
+           if(latitude!="" && longitude !="")
+           markers.addLayer(
+             new L.Marker(
+               L.latLng(
+                 Number(latitude),
+                 Number(longitude)
+               ),
+               {icon: archiveIcon}
+             )
+             .bindPopup(
+               '<p class="title">'.concat(archive_name).concat('</p><p>')
+               .concat('<a href=')
+                 .concat($("#request-root").text()).concat(archive_id).concat('/archive').concat(' class="mdl-button" target="_blank">').concat('Archive')
+               .concat('</a>')
+               .concat('</p>')
+               .concat('<p>')
+               .concat('<button onclick="selectArchive(\'').concat(archive_id).concat('\')">').concat('show charters on map').concat('</button>')
+               .concat('</p>')
+             )
+           ); //how about bulk adding? ;-)
+        });
+        map.addLayer(markers);
     });
 
 });
+
+function selectArchive(id){
+    markers.clearLayers();
+    $("#archive-selector").find('option[value="' + id + '"]').prop('selected', true).trigger('change');
+}
 // used to generate a nicely distributed repeatable random numbers sequence
 function seededRandom(min, max) {
     max = max || 1;

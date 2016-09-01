@@ -111,7 +111,30 @@
                 <xrx:resource alt="chartermarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarker_small</xrx:resource>
             </div>
             <div id="chartermarkershadow" style="display: none;">
-                <xrx:resource alt="chartermarkerahadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkershadow_small</xrx:resource>
+                <xrx:resource alt="chartermarkershadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkershadow_small</xrx:resource>
+            </div>
+
+            <div id="archivemarker" style="display: none;">
+                <xrx:resource alt="archivemarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/archivemarker</xrx:resource>
+            </div>
+            <div id="archivemarkershadow" style="display: none;">
+                <xrx:resource alt="archivemarkershadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/archivemarkershadow</xrx:resource>
+            </div>
+
+            <div id="archive-locations" style="display: none;">
+                {
+                  for $archive in $archives-in-eag-format
+                  order by $archive/eag:repositorid/text() ascending
+                  return
+                  (
+                  <div class="archive" style="display: none;">
+                    <archive-name>{ $archive//eag:autform/text() } ({ $archive//eag:repositorid/text() })</archive-name>,
+                    <archive-id>{$archive//eag:repositorid/text()}</archive-id>
+                    <latitude>{ $archive//eag:location/@latitude/string() }</latitude>,
+                    <longitude>{ $archive//eag:location/@longitude/string() }</longitude>
+                  </div>
+                  )
+                }
             </div>
             <div id="all-my-archives">
                 <select id="archive-selector">
