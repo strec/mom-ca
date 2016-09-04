@@ -139,7 +139,12 @@ it leaves the active development stage.
 					</span>
 					<span>: </span>
 					<span>{ $wcharters:charter-context-name }</span>
-				</div>      
+				</div>
+      	<div>
+      		<span>
+      			<a href="{ conf:param('request-root') }geo?archid={$charter:rarchiveid}&amp;fondid={$charter:rfondid}" target="_blank" id="link_show_charters_on_map"><button>Show charters on map</button></a>
+      		</span>
+      	</div>
       </xrx:view>
     </xrx:div>
     <xrx:div>
