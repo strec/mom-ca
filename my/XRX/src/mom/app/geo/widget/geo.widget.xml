@@ -161,8 +161,10 @@
                 <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
                     <div class="mdl-tabs__tab-bar">
                         <a href="#map-panel" class="mdl-tabs__tab is-active">Map</a>
+                        <!--
                         <a href="#archives-panel" class="mdl-tabs__tab">Archives</a>
                         <a href="#whatever-panel" class="mdl-tabs__tab">Whatever</a>
+                        -->
                     </div>
                     <div class="mdl-tabs__panel is-active" id="map-panel">
                         <div class="mdl-grid">
@@ -175,10 +177,11 @@
                             <div class="mdl-cell mdl-cell--2-col"/>
                         </div>
                     </div>
+                    <!--
                     <div class="mdl-tabs__panel" id="archives-panel">
                         
                         <ul class="demo-list-two mdl-list">
-                            <li class="mdl-list__item mdl-list__item--two-line">
+                            <li class="mdl-list__item mdl-list__item-two-line">              two dashes before two!!!
                                 <span class="mdl-list__item-primary-content">
                                     <i class="material-icons mdl-list__item-avatar">person</i>
                                     <span>Bryan Cranston</span>
@@ -189,7 +192,7 @@
                                     <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
                                 </span>
                             </li>
-                            <li class="mdl-list__item mdl-list__item--two-line">
+                            <li class="mdl-list__item mdl-list__item-two-line">              two dashes before two!!!
                                 <span class="mdl-list__item-primary-content">
                                     <i class="material-icons mdl-list__item-avatar">person</i>
                                     <span>Aaron Paul</span>
@@ -199,7 +202,7 @@
                                     <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
                                 </span>
                             </li>
-                            <li class="mdl-list__item mdl-list__item--two-line">
+                            <li class="mdl-list__item mdl-list__item-two-line">               two dashes before two!!!
                                 <span class="mdl-list__item-primary-content">
                                     <i class="material-icons mdl-list__item-avatar">person</i>
                                     <span>Bob Odenkirk</span>
@@ -212,7 +215,7 @@
                         </ul>
                     </div>
                     <div class="mdl-tabs__panel" id="whatever-panel">
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
