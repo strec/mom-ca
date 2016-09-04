@@ -57,6 +57,14 @@
             <xrx:name>$archives-in-eag-format</xrx:name> <!-- Encoded Archival Guide -->
             <xrx:expression>$metadata-scope//eag:eag</xrx:expression>
         </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$archive-id</xrx:name>
+            <xrx:expression>request:get-parameter('archid', '')</xrx:expression>
+        </xrx:variable>
+        <xrx:variable>
+            <xrx:name>$fond-id</xrx:name>
+            <xrx:expression>request:get-parameter('fondid', '')</xrx:expression>
+        </xrx:variable>
         <!-- look into fonds.widget.xml for how to extract more detailed information about the different archives. It has been done there before. -->
     </xrx:variables>
     <xrx:portal>tag:www.monasterium.net,2011:/mom/portal/fullscreen</xrx:portal>
@@ -105,7 +113,10 @@
     <xrx:view>
         <div id="pseudoBody" ng-app="geoApp">
             <div id="getChartersInsideFondService" style="display: none;">{ conf:param('request-root')}service/get-charters-inside-fond</div>
+            <div id="getChartersInsideCollectionService" style="display: none;">{ conf:param('request-root')}service/get-charters-inside-collection</div>
             <div id="request-root" style="display: none;">{ conf:param('request-root') }</div>
+            <div id="archive-id" style="display: none;">{$archive-id}</div>
+            <div id="fond-id" style="display: none;">{$fond-id}</div>
             <div id="charters-with-placeName"></div>
             <div id="chartermarker" style="display: none;">
                 <xrx:resource alt="chartermarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarker_small</xrx:resource>
