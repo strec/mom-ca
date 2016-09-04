@@ -115,7 +115,7 @@ $(document).ready(function(){
                     //add all the markers to the map
                     map.addLayer(markers);
                    // markers.layer.zoomToBounds();
-    
+
                    // displays the links to all charters with issued placeName inside archive.
                     /*var myhtml = '';
                     $.each(charterInfoSubsets,
@@ -130,6 +130,66 @@ $(document).ready(function(){
             }
         });
     });
+
+    if($("#fond-id").text()!=''){
+        $.ajax({
+            url: $("#getChartersInsideCollectionService").text(),
+            data: "archive-id=" + $("#archive-id").text() + "&fond-id=" + $("#fond-id").text(),
+            statusCode: {
+                200: function(data) {
+                    markers.clearLayers();
+                    $xml = $( data );
+                    var $charters = $xml.find("charter");
+                    //reset random seed to make charter map scattering consistent.
+                    my_random_seed = seed;
+                    $.each($charters,
+                           function() {
+                             var next = {
+                                          ident: $(this).find("ident").text(),
+                                          name:  $(this).find("name").text(),
+                                          lat:   $(this).find("lat").text(),
+                                          lng:   $(this).find("lng").text()
+                                        }
+                             if(next["lat"] && next["lng"]){
+                             //add a marker representing the charter to the map.
+                               markers.addLayer(
+                                 new L.Marker(
+                                   L.latLng(
+                                     Number(next["lat"]) + (seededRandom() * 0.001 * (seededRandom() < 0.5 ? -1 : 1)),
+                                     Number(next["lng"]) + (seededRandom() * 0.004 * (seededRandom() < 0.5 ? -1 : 1))
+                                   ),
+                                   {icon: charterIcon}
+                                 )
+                                 .bindPopup(
+                                   '<p class="title">'.concat(next["ident"]).concat('</p><p>')
+                                   .concat(next["name"]).concat('</p>').concat('<p><a href="')
+                                   .concat($("#request-root").text()).concat(next["ident"])
+                                   .concat('/charter').concat('" target="_blank">').concat('View Charter')
+                                   .concat('</a'))
+                                 ); //how about bulk adding? ;-)
+                             }
+                             // keep it inside this array for future actions
+                             charterInfoSubsets.push(next);
+                           }
+                    );
+                    //add all the markers to the map
+                    map.addLayer(markers);
+                   // markers.layer.zoomToBounds();
+
+                   // displays the links to all charters with issued placeName inside archive.
+                    /*var myhtml = '';
+                    $.each(charterInfoSubsets,
+                        function(index) {
+                            myhtml += '<p><a href="'.concat($("#request-root").text()).concat(this.ident)
+                                                     .concat('/charter').concat('" target="_blank">').concat(index).concat('</a></p>');
+                                   }
+                    );
+                    $('#charters-with-placeName').html(myhtml);*/
+
+                }
+            }
+        });
+    }
     
     $( document ).on('click', '#show-archives', function(){
       markers.clearLayers();
