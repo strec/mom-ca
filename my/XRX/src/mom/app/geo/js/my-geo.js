@@ -29,6 +29,18 @@ $(document).ready(function(){
           shadowSize: [70, 55],
           shadowAnchor: [6, 53]
       });
+      //custom charters marker for map
+	  var chartersIcon = L.icon({
+          iconUrl: $("#chartermarkers > img").attr('src'),
+          //iconRetinaUrl: ,
+          iconSize: [38, 85],
+          iconAnchor: [18, 80],
+          popupAnchor: [0, -66],
+          shadowUrl: $("#chartermarkersshadow > img").attr('src'),
+          //shadowRetinaUrl: ,
+          shadowSize: [70, 55],
+          shadowAnchor: [6, 53]
+      });
       //custom archive marker for map
       var archiveIcon = L.icon({
           iconUrl: $("#archivemarker > img").attr('src'),

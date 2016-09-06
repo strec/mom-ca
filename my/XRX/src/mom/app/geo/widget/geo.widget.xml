@@ -125,6 +125,13 @@
                 <xrx:resource alt="chartermarkershadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkershadow_small</xrx:resource>
             </div>
 
+            <div id="chartermarkers" style="display: none;">
+                <xrx:resource alt="chartermarkers" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkers_small</xrx:resource>
+            </div>
+            <div id="chartermarkersshadow" style="display: none;">
+                <xrx:resource alt="chartermarkersshadow" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/chartermarkersshadow_small</xrx:resource>
+            </div>
+
             <div id="archivemarker" style="display: none;">
                 <xrx:resource alt="archivemarker" type="image/png">tag:www.monasterium.net,2011:/mom/resource/image/archivemarker</xrx:resource>
             </div>

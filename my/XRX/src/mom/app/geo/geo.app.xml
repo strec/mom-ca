@@ -73,6 +73,16 @@ along with VdU/VRET.  If not, see http://www.gnu.org/licenses.
       <xrx:name>chartermarkershadow_small.png</xrx:name>
     </xrx:resource>
     <xrx:resource>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/image/chartermarkers_small</xrx:atomid>
+      <xrx:relativepath>image/</xrx:relativepath>
+      <xrx:name>chartermarkers_small.png</xrx:name>
+    </xrx:resource>
+    <xrx:resource>
+      <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/image/chartermarkersshadow_small</xrx:atomid>
+      <xrx:relativepath>image/</xrx:relativepath>
+      <xrx:name>chartermarkersshadow_small.png</xrx:name>
+    </xrx:resource>
+    <xrx:resource>
       <xrx:atomid>tag:www.monasterium.net,2011:/mom/resource/image/archivemarker</xrx:atomid>
       <xrx:relativepath>image/</xrx:relativepath>
       <xrx:name>archive_marker.png</xrx:name>
