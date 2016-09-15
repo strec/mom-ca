@@ -114,6 +114,7 @@ $(document).ready(function(){
                                  var next = {
                                               ident: $(this).find("ident").text(),
                                               name:  $(this).find("name").text(),
+                                              date: $(this).find("date").text(),
                                               lat:   the_lat,
                                               lng:   the_lng
                                             }
@@ -142,9 +143,9 @@ $(document).ready(function(){
                              var popUpContent = '';
                              $.each($all_charter_data[$(this)[0]], function() {
                                  //console.log("Hey"); console.log($(this));
-                                 popUpContent += '<p class="title">'.concat('<a href="')
+                                 popUpContent += '<p>'.concat($(this)[0]["date"]).concat("  ").concat('<a href="')
                                    .concat($("#request-root").text()).concat($(this)[0]["ident"])
-                                   .concat('/charter').concat('" target="_blank">').concat($(this)[0]["ident"]).concat('</p>');
+                                   .concat('/charter').concat('" target="_blank">').concat($(this)[0]["ident"]).concat('</a>').concat('</p>');
                              });
                               markers.addLayer(
                                  new L.Marker(
@@ -202,51 +203,57 @@ $(document).ready(function(){
                     markers.clearLayers();
                     $xml = $( data );
                     var $charters = $xml.find("charter");
-                    //reset random seed to make charter map scattering consistent.
-                    my_random_seed = seed;
+                    var $all_charter_data = {};
                     $.each($charters,
                            function() {
-                             var next = {
-                                          ident: $(this).find("ident").text(),
-                                          name:  $(this).find("name").text(),
-                                          lat:   $(this).find("lat").text(),
-                                          lng:   $(this).find("lng").text()
-                                        }
-                             if(next["lat"] && next["lng"]){
-                             //add a marker representing the charter to the map.
-                               markers.addLayer(
-                                 new L.Marker(
-                                   L.latLng(
-                                     Number(next["lat"]) + (seededRandom() * 0.001 * (seededRandom() < 0.5 ? -1 : 1)),
-                                     Number(next["lng"]) + (seededRandom() * 0.004 * (seededRandom() < 0.5 ? -1 : 1))
-                                   ),
-                                   {icon: charterIcon}
-                                 )
-                                 .bindPopup(
-                                   '<p class="title">'.concat(next["ident"]).concat('</p><p>')
-                                   .concat(next["name"]).concat('</p>').concat('<p><a href="')
-                                   .concat($("#request-root").text()).concat(next["ident"])
-                                   .concat('/charter').concat('" target="_blank">').concat('View Charter')
-                                   .concat('</a'))
-                                 ); //how about bulk adding? ;-)
+                             var the_lat = $(this).find("lat").text();
+                             var the_lng = $(this).find("lng").text();
+                             // only include those charters with both lat and lng.
+                             if(the_lat !='' && the_lng != ''){
+                                 var next = {
+                                              ident: $(this).find("ident").text(),
+                                              name:  $(this).find("name").text(),
+                                              date: $(this).find("date").text(),
+                                              lat:   the_lat,
+                                              lng:   the_lng
+                                            }
+                                 //using combined lat-lng string as a key for objects inside $all_charter_data object.
+                                 var lat_lng_string = the_lat.concat(the_lng);
+                                 // if no array under this key, yet, initialise it with next as first object in array, otherwise just push next object to already present array under that key.
+                                 $all_charter_data[lat_lng_string] ? $all_charter_data[lat_lng_string].push(next) : $all_charter_data[lat_lng_string] = [next];
                              }
-                             // keep it inside this array for future actions
-                             charterInfoSubsets.push(next);
                            }
                     );
+                    $.each(Object.keys($all_charter_data), function() {
+                             // create marker with all charters in array under that key in a nice and fancy list view. Each array under a key of $all_charter_data holds all charters of one marker.
+                             // now, add a marker for this lat-lng combination, representing the charter(s) on the map.
+                             var popUpOptions =
+                                {
+                                    'maxWidth': '500',
+                                    'maxHeight': '400'
+                                }
+                             var popUpContent = '';
+                             $.each($all_charter_data[$(this)[0]], function() {
+                                 popUpContent += '<p>'.concat($(this)[0]["date"]).concat("  ").concat('<a href="')
+                                   .concat($("#request-root").text()).concat($(this)[0]["ident"])
+                                   .concat('/charter').concat('" target="_blank">').concat($(this)[0]["ident"]).concat('</a>').concat('</p>');
+                             });
+                              markers.addLayer(
+                                 new L.Marker(
+                                   L.latLng(
+                                     Number($all_charter_data[$(this)[0]][0]["lat"]), // first element of array has the same coordinates as all the others.
+                                     Number($all_charter_data[$(this)[0]][0]["lng"])
+                                   ),
+                                   {icon: $all_charter_data[$(this)[0]].length > 1 ? chartersIcon : charterIcon}
+                                 )
+                                 .bindPopup(popUpContent, popUpOptions
+                                 )
+                              ); //how about bulk adding? ;-)
+
                     //add all the markers to the map
                     map.addLayer(markers);
                    // markers.layer.zoomToBounds();
-
-                   // displays the links to all charters with issued placeName inside archive.
-                    /*var myhtml = '';
-                    $.each(charterInfoSubsets,
-                        function(index) {
-                            myhtml += '<p><a href="'.concat($("#request-root").text()).concat(this.ident)
-                                                     .concat('/charter').concat('" target="_blank">').concat(index).concat('</a></p>');
-                                   }
-                    );
-                    $('#charters-with-placeName').html(myhtml);*/
+                });
 
                 }
             }

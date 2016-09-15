@@ -107,12 +107,14 @@
             for $charter in $charters-with-placename-inside-issued
             let $useful-info-from-atom-id := substring-after($charter//atom:id/text(), "tag:www.monasterium.net,2011:/charter/")
             (: let $more-useful-info-from-atom-id := substring-after($useful-info-from-atom-id, "/") :)
+            let $date := $charter//cei:issued/cei:date/text()
             let $placeName := $charter//cei:issued/cei:placeName/text()
             let $placeName-reg := $charter//cei:issued/cei:placeName/@reg
             let $location-match := $locations/location[name = $placeName or name_reg = $placeName-reg][1]
             return
             element charter{
             element ident{$useful-info-from-atom-id},
+            element date{$date},
             $location-match/name,
             $location-match/name_reg,
             $location-match/lat,
