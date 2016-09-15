@@ -124,16 +124,16 @@ $(document).ready(function(){
                              }
                            }
                     );
-                    console.log($all_charter_data);
+                    //console.log($all_charter_data);
                     //console.log(Object.keys($all_charter_data));
                     $.each(Object.keys($all_charter_data), function() {
                              // create marker with all charters in array under that key in a nice and fancy list view. Each array under a key of $all_charter_data holds all charters of one marker.
                              // first, sort the charters.
                             // $all_charter_data[$(this)].sort( function(a,b) {return (a.ident > b.ident) ? 1 : ((b.ident > a.ident) ? -1 : 0);} );
                              // now, add a marker for this lat-lng combination, representing the charter(s) on the map.
-                             console.log($(this));
-                             console.log($all_charter_data["38.1939415.55256"]);
-                             console.log($all_charter_data[$(this)[0]]);
+                            // console.log($(this));
+                            // console.log($all_charter_data["38.1939415.55256"]);
+                            // console.log($all_charter_data[$(this)[0]]);
                              var popUpOptions =
                                 {
                                     'maxWidth': '500',
